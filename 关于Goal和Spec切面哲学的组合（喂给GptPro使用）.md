@@ -384,7 +384,7 @@ Categories: LLMs
 
 
 
-# 《第二篇》KiroFold Single Spec，Kiro单文件版\.md
+# 《第二篇》KiroFold Single Spec，Kiro单文件版.md
 
 
 
