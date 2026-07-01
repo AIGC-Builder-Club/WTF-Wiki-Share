@@ -1,3 +1,6 @@
+
+
+
 ```folder-overview
 id: 1f896eaf-3a3b-4d47-bb3f-fac796673df2
 folderPath: Path of folder linked to the file
@@ -26,3 +29,5 @@ fmtpIntegration: false
 titleSize: 1
 isInCallout: false
 ```
+
+
