@@ -12,3 +12,4 @@ Thumbs.db
 
 # 新增的一些
 .idea/
+.gitignore
