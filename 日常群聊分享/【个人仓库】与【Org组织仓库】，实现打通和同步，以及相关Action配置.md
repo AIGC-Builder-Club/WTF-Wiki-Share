@@ -29,7 +29,7 @@
 - 组织 fork 默认不会“实时跟随”你的个人仓库
 	- GitHub fork 的同步逻辑还是一样：fork 只是建立了上下游关系，不是实时镜像。组织 fork 想跟随你的个人仓库，需要点网页上的 Sync fork，或者用 gh repo sync / git fetch upstream 等方式同步。GitHub 官方的同步文档也是这么描述的：有网页同步、CLI 同步、命令行同步三种方式。
 
-# 方案三A：推荐    个人仓库 push 后，用 Action 自动推到组织仓库
+# 方案三A：（推荐）    个人仓库 push 后，用 Action 自动推到组织仓库
 
 
 - GitHub Actions 可以由 push 事件触发；但是个人仓库里的 GITHUB_TOKEN 权限只限当前仓库，所以要推送到另一个组织仓库，通常需要一个 PAT、GitHub App token，或者写权限 deploy key。
@@ -254,7 +254,7 @@ ORG_PUSH_TOKEN
 	- 1
 
 
-## 方案三B：（安全版 workflow）组织仓库定时同步个人 public 仓库
+## 方案三B：（基于方案三A思路，安全版 workflow）组织仓库定时同步个人 public 仓库
 
 
 放在两个仓库都可以，但**实际有效运行目标是组织仓库**。为了完整镜像，建议这个文件也存在于你的个人仓库里，这样组织仓库每次 reset 后不会把 workflow 删除掉；同时加一个仓库名保护条件，防止它在个人仓库里误运行。
