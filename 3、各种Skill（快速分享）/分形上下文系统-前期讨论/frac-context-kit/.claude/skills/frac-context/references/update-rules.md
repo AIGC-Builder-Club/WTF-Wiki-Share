@@ -95,14 +95,14 @@ python .claude/skills/frac-context/scripts/frac.py chain <target-path>
 
 ---
 
-## 6. Git clone / checkout 后的 stamp
+## 6. Git clone / checkout 后的 stamp_for_clone
 
 如果 `.frac.md` 纳入 Git，clone 或 checkout 后 mtime 不一定可信。
 
 在确认 `.frac.md` 内容可信后运行：
 
 ```bash
-python .claude/skills/frac-context/scripts/frac.py stamp .
+python .claude/skills/frac-context/scripts/frac.py stamp_for_clone .
 ```
 
-`stamp` 会自底向上 touch `.frac.md`，恢复本地 mtime 不变量。
+`stamp_for_clone` 会自底向上 touch `.frac.md`，恢复本地 mtime 不变量。

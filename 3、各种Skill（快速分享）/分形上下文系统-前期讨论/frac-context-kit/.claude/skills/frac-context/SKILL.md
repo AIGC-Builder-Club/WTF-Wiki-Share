@@ -1,15 +1,15 @@
 ---
 name: frac-context
-description: Maintain and use .frac.md recursive directory context files. Use when initializing, checking, updating, or consulting fractal context for coding, VibeCoding, knowledge-management, or general file-directory projects.
+description: 维护并使用 `.frac.md` 递归目录上下文文件。用于初始化、检查、更新或查阅分形上下文，适用于编码、VibeCoding、知识管理或一般文件目录项目。
 ---
 
-# Frac Context Skill
+# Frac Context 技能
 
-This skill maintains a lightweight fractal context tree using `.frac.md` files.
+此技能使用 `.frac.md` 文件维护一个轻量级的分形上下文树。
 
-The system is intentionally small. It is not a RAG system, not an embedding index, not a repo cognition layer, and not a context-pack generator.
+该系统刻意保持精简。它不是 RAG 系统，不是嵌入索引，不是仓库认知层，也不是上下文打包生成器。
 
-## Core invariant
+## 核心不变量
 
 For every directory `D`:
 
@@ -17,106 +17,90 @@ For every directory `D`:
 Frac(D) = Summary( OwnFiles(D), ChildFracs(D) )
 ```
 
-Where:
+其中：
 
 ```text
-OwnFiles(D)   = direct eligible files in D, excluding .frac.md
-ChildFracs(D) = .frac.md files in immediate child directories
+OwnFiles(D)   = D 中符合条件的直接文件，不包括 .frac.md
+ChildFracs(D) = 直接子目录中的 .frac.md 文件
 ```
 
-A parent `.frac.md` must not read grandchildren source files or deep nested documents. A parent only trusts the child `.frac.md` summaries.
+父级 `.frac.md` 不得读取孙级目录的源文件或更深层嵌套的文档。父级只能信任子级 `.frac.md` 的摘要。
 
-Freshness is based on filesystem mtime:
+【新鲜度】基于文件系统的 mtime：
 
 ```text
-fresh(D) ⇔ .frac.md exists and frac_mtime_ns >= max(input_mtime_ns)
-stale(D) ⇔ .frac.md is missing or any input is newer
+fresh(D) ⇔ .frac.md 存在且 frac_mtime_ns >= max(input_mtime_ns)
+stale(D) ⇔  .frac.md 缺失 或 任一输入比它更新
 ```
 
-The directory entry mtime is also treated as an input so direct file add/delete/rename operations can be detected.
+目录条目的 mtime 也视为输入，因此可以检测直接文件的新增、删除或重命名操作。
 
-## Before coding
+## Coding之前
 
-For a target file or directory, run:
+对于目标文件或目录，运行：
 
 ```bash
 python .claude/skills/frac-context/scripts/frac.py chain <target-path>
 ```
 
-Read the listed `.frac.md` files from root to target. Then read the target file itself.
+按【从根目录到目标】的顺序，读取列出的 `.frac.md` 文件，然后读取目标文件本身。
 
-Only read extra neighboring files when the closest `.frac.md` explicitly says they are relevant.
+仅当最近的 `.frac.md` 明确说明相关时，才读取额外的相邻文件。
 
-## After editing files
+## 编辑文件之后
 
-Run:
+运行：
 
 ```bash
 python .claude/skills/frac-context/scripts/frac.py plan .
 ```
 
-Update the listed directories from top of the output to bottom. The order is bottom-up: deepest directories first, root last.
+按照【输出】中列出的顺序，从上到下更新这些目录。输出顺序为自底向上：最深层目录优先，根目录最后。
 
-For each directory in the update plan, run:
+对于更新计划中的每个目录，运行：
 
 ```bash
 python .claude/skills/frac-context/scripts/frac.py inputs <dir>
 ```
 
-Read only the listed direct files and child `.frac.md` files. Then rewrite `<dir>/.frac.md` according to the template in `references/frac-template.md`.
+仅读取列出的直接文件和子级 `.frac.md` 文件。然后根据 `references/frac-template.md` 中的模板重写 `<目录>/.frac.md`。
 
-## Writing rules for .frac.md
+## `.frac.md` 的编写规则
 
-Use concise, high-signal summaries.
+使用简洁、高信息密度的摘要。
 
-Each `.frac.md` should usually contain:
+每个 `.frac.md` 通常应包含：
 
-1. What this directory is
-2. Direct files
-3. Child directory navigation
-4. Local constraints / conventions / prohibitions
-5. When to drill down
+1. 此目录是什么
+2. 直接文件
+3. 子目录导航
+4. 本地约束 / 约定 / 禁止事项
+5. 何时需要进一步深入
 
-Avoid generic filler such as “this module is important,” “keep code clean,” or “ensure maintainability.”
+避免使用诸如“此模块很重要”“保持代码整洁”或“确保可维护性”之类的泛泛而谈。
 
-Do not include a long changelog. Git already handles history.
+不要包含冗长的变更日志。Git 已经负责历史记录。
 
-Do not turn `.frac.md` into a README replacement. It is a generated or regenerated context summary.
+不要把 `.frac.md` 变成 README 的替代品。它是一个生成或重新生成的上下文摘要。
 
-## What not to do
-
-Do not build or request:
-
-```text
-vector database
-embedding index
-RAG pipeline
-graph database
-global repo map
-AST static-analysis layer
-token ranking system
-L1/L2/L3/L4 context pack
-file-header annotation system
-```
-
-## Useful commands
+## 常用命令
 
 ```bash
-# show missing/stale/fresh frac files
+# 显示缺失 / 过期 / 最新的 frac 文件  （输出可能会较大）
 python .claude/skills/frac-context/scripts/frac.py status .
 
-# show bottom-up update order
+# 显示 自底向上的更新顺序
 python .claude/skills/frac-context/scripts/frac.py plan .
 
-# show allowed inputs for updating one directory
+# 显示更新某个目录时 允许使用的输入
 python .claude/skills/frac-context/scripts/frac.py inputs <dir>
 
-# show context chain for a target path
+# 显示目标路径 在使用的 上下文链
 python .claude/skills/frac-context/scripts/frac.py chain <file-or-dir>
 
-# create missing placeholder .frac.md files
+# 创建缺失的 【占位 .frac.md 文件】
 python .claude/skills/frac-context/scripts/frac.py init .
 
-# trust current .frac.md files and refresh their mtimes bottom-up
-python .claude/skills/frac-context/scripts/frac.py stamp .
+# 一般在Git Clone之后， 信任当前的 .frac.md 文件，并按自底向上的顺序刷新它们的 mtime
+python .claude/skills/frac-context/scripts/frac.py stamp_for_clone .
 ```

@@ -55,8 +55,8 @@ def main():
         assert "src/.frac.md" in chain
         assert "src/auth/.frac.md" in chain
 
-        stamp = run(["stamp", "."], project)
-        assert "touched" in stamp
+        stamp_for_clone = run(["stamp_for_clone", "."], project)
+        assert "touched" in stamp_for_clone
 
         status = run(["status", "."], project)
         assert "fresh" in status

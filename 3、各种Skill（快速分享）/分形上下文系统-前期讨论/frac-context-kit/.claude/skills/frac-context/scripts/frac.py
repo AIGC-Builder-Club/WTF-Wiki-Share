@@ -547,7 +547,7 @@ TODO
         chain_dirs = [a for a in self.ancestors_to_root(d) if a in self.eligible_dirs()]
         return [self.frac_path(d) for d in chain_dirs]
 
-    def stamp(self, dirs: Optional[Iterable[Path]] = None) -> List[Path]:
+    def stamp_for_clone(self, dirs: Optional[Iterable[Path]] = None) -> List[Path]:
         if dirs is None:
             dirs = self.eligible_dirs()
         ordered = sorted(set(dirs), key=lambda p: (-self.depth(p), self.rel(p)))
@@ -680,7 +680,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("init", help="Create missing placeholder .frac.md files and mark them stale.")
     add_root(sp)
 
-    sp = sub.add_parser("stamp", help="Touch existing .frac.md files bottom-up to restore mtime invariant.")
+    sp = sub.add_parser("stamp_for_clone", help="Touch existing .frac.md files bottom-up to restore mtime invariant.")
     add_root(sp)
 
     return p
@@ -691,7 +691,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     try:
         respect_gitignore = not getattr(args, "no_gitignore", False)
 
-        if args.command in {"status", "plan", "init", "stamp"}:
+        if args.command in {"status", "plan", "init", "stamp_for_clone"}:
             project = FracProject(Path(args.root), respect_gitignore=respect_gitignore)
         elif args.command in {"inputs", "chain"}:
             project = FracProject(Path(args.root), respect_gitignore=respect_gitignore)
@@ -747,8 +747,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                     print("created: none")
             return 0
 
-        if args.command == "stamp":
-            touched = project.stamp()
+        if args.command == "stamp_for_clone":
+            touched = project.stamp_for_clone()
             if args.json:
                 print_json([project.rel(p) for p in touched])
             else:

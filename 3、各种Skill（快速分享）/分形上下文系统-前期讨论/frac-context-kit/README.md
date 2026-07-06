@@ -167,10 +167,10 @@ src/auth/.frac.md
 如果你把 `.frac.md` 纳入 Git，clone 或 checkout 后，mtime 不一定能表达“摘要晚于输入”的语义。这时可以在确认 `.frac.md` 内容可信后运行：
 
 ```bash
-python .claude/skills/frac-context/scripts/frac.py stamp .
+python .claude/skills/frac-context/scripts/frac.py stamp_for_clone .
 ```
 
-`stamp` 会自底向上 touch 所有 `.frac.md`，让父级 mtime 不早于子级 mtime。
+`stamp_for_clone` 会自底向上 touch 所有 `.frac.md`，让父级 mtime 不早于子级 mtime。
 
 ---
 
