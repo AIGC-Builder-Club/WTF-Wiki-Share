@@ -1,0 +1,46 @@
+name: Push to org repo
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: push-to-org-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  push-to-org:
+    if: github.repository == 'hanshou101/Obsidian_PublicGitHubShare_InsteadOf_FeiShu'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout personal repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Push to organization repo
+        env:
+          ORG_PUSH_TOKEN: ${{ secrets.ORG_PUSH_TOKEN }}
+          ORG_REPO: AIGC-Builder-Club/WTF-Wiki-Share
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git remote add org "https://x-access-token:${ORG_PUSH_TOKEN}@github.com/${ORG_REPO}.git"
+
+          if [ "$GITHUB_REF_TYPE" = "branch" ]; then
+            git push org "HEAD:refs/heads/${GITHUB_REF_NAME}"
+          elif [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            git push org "refs/tags/${GITHUB_REF_NAME}:refs/tags/${GITHUB_REF_NAME}"
+          fi
