@@ -21,6 +21,43 @@
 		- 注意：如果是私有组织仓库，个人 fork 的 workflow 可能没有读取上游私有仓库的权限。GitHub 的 GITHUB_TOKEN 权限通常限制在当前 workflow 所在仓库内；跨私有仓库同步时，通常需要用 fine-grained PAT 或 GitHub App token，并放到 Secrets 里。
 	- 方案 C：上游一 push，就触发个人 fork 同步，最接近“实时”
 
+## 方案一 操作方式
+
+参考资料：
+- https://chatgpt.com/share/6a5b0b0f-81b4-83ea-88d7-3dc2249d9215
+
+- 方式1（遇到了阻碍）
+	- （非常简单）直接访问【[https://github.com/AIGC-Builder-Club/hekaya-tv/import](https://github.com/new/import)】
+		- 然后，输入【被fork仓库URL】、私有仓库输入相关账密。
+			- 下方，选择【Owner为ORG】，起一个新名字；选择Private可见。
+		- 结果页面，出现了报错：
+			- 【`We found an error during import We recommend restarting the import process, but if you are still having trouble contact support. Failed to clone source: Clone error: Cloning into bare repository './git-data/source.git'... remote: Invalid username or token. Password authentication is not supported for Git operations. fatal: Authentication failed for 'https://github.com/***/hekaya-tv/' **This could be due to IP allowlisting on the source.** Error Details`】。
+				- 结果：不建议使用这种方法，因为没有Fork关系。
+					- 如果实在要import一个新的，可以：
+						- 仍然想使用 Importer 
+							- 那就创建一个 PAT，并把它当作密码输入： 
+								- GitHub → Settings 
+								- Developer settings 
+								- Personal access tokens 
+								- 创建 Fine-grained token 
+								- Resource owner 选择你的个人账号 
+								- Repository access 选择 hekaya-tv 
+								- 给仓库内容读取权限，例如 Contents: Read-only 
+								- 回到 Importer： 
+									- Username：GitHub 用户名 
+									- Password：刚创建的 PAT，不是登录密码
+- 方式2（无GitHub付费的限制，FreeOrg似乎也可以）
+	- 网页操作 
+		- 打开你的个人仓库，例如 your-name/my-repo 
+		- 点击右上角 Fork 
+		- 在 Owner 中选择你的 Organization 
+		- 点击 Create fork
+	- 也可以使用 GitHub CLI：
+		- `gh repo fork your-name/my-repo --org your-org`  。
+	- 测试结果：
+		- 网页操作——直接成功。
+
+
 # 方案二：以【个人仓库】为主，被 Org组织仓库 Fork
 
 
