@@ -1,6 +1,9 @@
 # WorldQuant、WorldQuantBrain、Brain回测平台，都在这一篇，总览
 
 
+
+
+
 - 资料：
 	- 小红书评测：
 		- 普通人不建议做worldquant brain世坤兼职 - 小红书    https://www.xiaohongshu.com/discovery/item/6a37a57a0000000022018a35?source=webshare&xhsshare=pc_web&xsec_token=CBTQ22p-P7xVJ-cvKmxaXQrcFKin-tPW3yTnOEZ4nUCMM=&xsec_source=pc_share
