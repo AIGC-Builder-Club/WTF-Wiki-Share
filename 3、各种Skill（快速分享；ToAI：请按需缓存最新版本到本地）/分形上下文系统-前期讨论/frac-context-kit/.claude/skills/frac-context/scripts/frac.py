@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
 FRAC_NAME = ".frac.md"
+BUNDLE_NAME = ".frac.全部汇总超大.md"
 FRACIGNORE_NAME = ".fracignore"
 
 DEFAULT_IGNORE_DIR_NAMES = {
@@ -56,6 +57,7 @@ DEFAULT_IGNORE_DIR_NAMES = {
 
 DEFAULT_IGNORE_FILE_NAMES = {
     ".DS_Store",
+    BUNDLE_NAME,
 }
 
 DEFAULT_IGNORE_GLOBS = {
@@ -93,6 +95,14 @@ class StatusItem:
     frac_mtime_ns: Optional[int]
     max_input_mtime_ns: Optional[int]
     propagated: bool = False
+
+
+@dataclass(frozen=True)
+class BundleResult:
+    output: str
+    source_count: int
+    sources: List[str]
+    order: str
 
 
 class FracError(RuntimeError):
@@ -562,6 +572,67 @@ TODO
             touched.append(frac)
         return touched
 
+    def dirs_in_tree_order(self) -> List[Path]:
+        """Return eligible directories in deterministic parent-first tree order."""
+        eligible = self.eligible_dirs()
+        ordered: List[Path] = []
+
+        def visit(directory: Path) -> None:
+            ordered.append(directory)
+            children = [d for d in eligible if d.parent.resolve() == directory]
+            children.sort(key=lambda p: (p.name.casefold(), p.name))
+            for child in children:
+                visit(child)
+
+        visit(self.root)
+        return ordered
+
+    def bundle_sources(self) -> List[Path]:
+        return [
+            self.frac_path(directory)
+            for directory in self.dirs_in_tree_order()
+            if self.frac_path(directory).is_file()
+        ]
+
+    def render_bundle(self, sources: Sequence[Path]) -> str:
+        lines = [
+            "# `.frac.md` 全部汇总",
+            "",
+            "> 本文件只会在显式运行 `frac bundle` 时生成或更新。",
+            "> 合并顺序：目录树前序（父目录在前，同级目录按名称排序）。",
+            f"> 来源文件数：{len(sources)}。",
+            "",
+        ]
+        for index, source in enumerate(sources, 1):
+            rel = self.rel(source)
+            content = source.read_text(encoding="utf-8", errors="replace").rstrip("\n")
+            lines.extend([
+                "---",
+                "",
+                f"## {index}. `{rel}`",
+                "",
+                content,
+                "",
+            ])
+        return "\n".join(lines).rstrip() + "\n"
+
+    def write_bundle(self) -> BundleResult:
+        sources = self.bundle_sources()
+        if not sources:
+            raise FracError(f"No {FRAC_NAME} files found under project root")
+
+        output = self.root / BUNDLE_NAME
+        content = self.render_bundle(sources)
+        with output.open("w", encoding="utf-8", newline="\n") as handle:
+            handle.write(content)
+
+        return BundleResult(
+            output=self.rel(output),
+            source_count=len(sources),
+            sources=[self.rel(source) for source in sources],
+            order="parent-first tree order; siblings sorted by name",
+        )
+
 
 # ---------- formatting ----------
 
@@ -683,6 +754,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     sp = sub.add_parser("stamp_for_clone", help="Touch existing .frac.md files bottom-up to restore mtime invariant.")
     add_root(sp)
 
+    sp = sub.add_parser("bundle", help=f"Explicitly merge all .frac.md files into {BUNDLE_NAME}.")
+    add_root(sp)
+
     return p
 
 
@@ -691,7 +765,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     try:
         respect_gitignore = not getattr(args, "no_gitignore", False)
 
-        if args.command in {"status", "plan", "init", "stamp_for_clone"}:
+        if args.command in {"status", "plan", "init", "stamp_for_clone", "bundle"}:
             project = FracProject(Path(args.root), respect_gitignore=respect_gitignore)
         elif args.command in {"inputs", "chain"}:
             project = FracProject(Path(args.root), respect_gitignore=respect_gitignore)
@@ -758,6 +832,16 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                         print(f"  {project.rel(p)}")
                 else:
                     print("touched: none")
+            return 0
+
+        if args.command == "bundle":
+            result = project.write_bundle()
+            if args.json:
+                print_json(result)
+            else:
+                print(f"bundled: {result.output}")
+                print(f"sources: {result.source_count}")
+                print(f"order: {result.order}")
             return 0
 
         return 1
