@@ -174,6 +174,32 @@ python .claude/skills/frac-context/scripts/frac.py stamp_for_clone .
 
 ---
 
+### 7. 手动汇总全部上下文
+
+只有明确需要单文件上下文包时，才手动运行：
+
+```bash
+python .claude/skills/frac-context/scripts/frac.py bundle .
+```
+
+该命令按目录树前序合并所有现存 `.frac.md`：父目录在前，同级目录按名称排序，每段带来源路径。默认输出为所指定目录下的：
+
+```text
+.frac.全部汇总超大.md
+```
+
+位置参数也可以是特定子目录。例如：
+
+```bash
+python .claude/skills/frac-context/scripts/frac.py bundle examples/minimal-project/src
+```
+
+这只会合并 `src/` 及其后代的 `.frac.md`，并写入 `src/.frac.全部汇总超大.md`。
+
+`bundle` 不会被 `status`、`plan`、`inputs`、`chain`、`init` 或 `stamp_for_clone` 自动调用。汇总文件也被排除在 Frac 内容输入之外。首次创建文件会改变所在根目录的 entry mtime，因此对应根摘要可能进入一次正常更新计划；后续原位重写不会反复触发该变化。
+
+---
+
 ## `.frac.md` 最小模板
 
 见：

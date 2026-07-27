@@ -1,13 +1,13 @@
 ---
 name: frac-context
-description: 维护并使用 `.frac.md` 递归目录上下文文件。用于初始化、检查、更新或查阅分形上下文，适用于编码、VibeCoding、知识管理或一般文件目录项目。
+description: 维护并使用 `.frac.md` 递归目录上下文文件，并可在明确要求时手动汇总全部 `.frac.md`。用于初始化、检查、更新、查阅或显式导出分形上下文，适用于编码、VibeCoding、知识管理或一般文件目录项目。
 ---
 
 # Frac Context 技能
 
 此技能使用 `.frac.md` 文件维护一个轻量级的分形上下文树。
 
-该系统刻意保持精简。它不是 RAG 系统，不是嵌入索引，不是仓库认知层，也不是上下文打包生成器。
+该系统刻意保持精简。它不是 RAG 系统，不是嵌入索引，也不是仓库认知层。日常流程不会自动打包上下文；仅有显式 `bundle` 命令会生成静态汇总文件。
 
 ## 核心不变量
 
@@ -83,6 +83,18 @@ python .claude/skills/frac-context/scripts/frac.py inputs <dir>
 
 不要把 `.frac.md` 变成 README 的替代品。它是一个生成或重新生成的上下文摘要。
 
+## 手动汇总全部上下文
+
+仅当用户明确要求合并全部上下文，或明确手动执行以下命令时运行：
+
+```bash
+python .claude/skills/frac-context/scripts/frac.py bundle .
+```
+
+该命令把所有现存 `.frac.md` 按目录树前序合并到项目根目录的 `.frac.全部汇总超大.md`：父目录在前，同级目录按名称排序，每段带来源路径。
+
+`bundle` 是独立的静态导出操作。`status`、`plan`、`inputs`、`chain`、`init` 和 `stamp_for_clone` 都不会调用它。汇总文件正文不作为 Frac 输入；首次创建文件会改变根目录 entry mtime，因此根摘要可能进入一次更新计划。正常刷新根摘要后，后续原位重写汇总文件不会反复触发该变化。
+
 ## 常用命令
 
 ```bash
@@ -103,4 +115,7 @@ python .claude/skills/frac-context/scripts/frac.py init .
 
 # 一般在Git Clone之后， 信任当前的 .frac.md 文件，并按自底向上的顺序刷新它们的 mtime
 python .claude/skills/frac-context/scripts/frac.py stamp_for_clone .
+
+# 仅在明确手动调用时，汇总全部 .frac.md 正文
+python .claude/skills/frac-context/scripts/frac.py bundle .
 ```

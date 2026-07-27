@@ -11,6 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FRAC = ROOT / ".claude" / "skills" / "frac-context" / "scripts" / "frac.py"
+BUNDLE_NAME = ".frac.全部汇总超大.md"
 
 
 def run(args, cwd):
@@ -60,6 +61,36 @@ def main():
 
         status = run(["status", "."], project)
         assert "fresh" in status
+
+        bundle_path = project / BUNDLE_NAME
+        assert not bundle_path.exists()
+        run(["status", "."], project)
+        assert not bundle_path.exists()
+
+        bundle = run(["bundle", "."], project)
+        assert "sources: 3" in bundle
+        assert bundle_path.exists()
+        bundle_content = bundle_path.read_text(encoding="utf-8")
+        expected_sections = [
+            "## 1. `.frac.md`",
+            "## 2. `src/.frac.md`",
+            "## 3. `src/auth/.frac.md`",
+        ]
+        positions = [bundle_content.index(section) for section in expected_sections]
+        assert positions == sorted(positions)
+
+        root_inputs = run(["inputs", "."], project)
+        assert BUNDLE_NAME not in root_inputs
+
+        root_bundle_before = bundle_path.read_bytes()
+        subtree_bundle = run(["bundle", "src"], project)
+        subtree_bundle_path = project / "src" / BUNDLE_NAME
+        assert "sources: 2" in subtree_bundle
+        assert subtree_bundle_path.exists()
+        subtree_content = subtree_bundle_path.read_text(encoding="utf-8")
+        assert "## 1. `.frac.md`" in subtree_content
+        assert "## 2. `auth/.frac.md`" in subtree_content
+        assert bundle_path.read_bytes() == root_bundle_before
 
     print("ok")
 
