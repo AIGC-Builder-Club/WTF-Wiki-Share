@@ -187,7 +187,7 @@ name = "OpenAI Resilient"
 
 这不能阻止 Codex 客户端把 Goal 改成 `blocked`，但能保证你按 Resume、迁移到新线程，甚至重启 App 后，模型能够准确接续。
 
-## 5. 真正的“自动无限续跑”需要外层守护程序
+## 5. 真正的“自动无限续跑”需要外层守护程序（Codex app-server）
 
 Codex 内置 Goal 目前没有“网络恢复后自动唤醒 blocked Goal”的持久调度器。相关的 wait/wake 能力仍是公开的功能请求；当前 `blocked`、`usageLimited`、`budgetLimited` 和 `complete` 都会停止自动续跑。
 
