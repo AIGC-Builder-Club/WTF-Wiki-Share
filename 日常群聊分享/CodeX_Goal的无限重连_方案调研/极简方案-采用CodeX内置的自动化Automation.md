@@ -224,6 +224,10 @@
 
 
 - 最后生成的产物，示例【`  .codex/automations/goal-019f8d10/automation.toml  `】：    （时间，可以改一下；【5分钟】还是太密集了。改为20分钟吧    ）
+	- 另外，还产生了一个需要引用的【mjs脚本】——通过桌面端同版本  ` Codex App Server 执行：thread/goal/get → thread/goal/set → thread/goal/get `  
+		- [/Users/ycw/.codex/automations/goal-019f8d10/thread_goal_rpc.mjs  已备份到本GitHub目录下](Root/_外部Publish/日常群聊分享/CodeX_Goal的无限重连_方案调研/极简方案-采用CodeX内置的自动化Automation/thread_goal_rpc.mjs)
+			- 省略 objective 和 tokenBudget，不会重置目标或用量。
+			- 只允许 blocked → active；active 幂等跳过，paused/complete/UNKNOWN 拒绝修改。
 
 - （可能的一些小问题、大问题）
 	- v5版本
