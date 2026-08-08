@@ -1,0 +1,6 @@
+- 1、应注意，维护一个根的说明文件，如【README.md】里面、或【分形上下文】方式。内容多、有分支内容的，建议在【根说明文件】做索引。
+	- 1、分形上下文，本身更新频率较低，优先采用本地的；本地缺失则拉取【 https://github.com/AIGC-Builder-Club/WTF-Wiki-Share/blob/main/3%E3%80%81%E5%90%84%E7%A7%8DSkill%EF%BC%88%E5%BF%AB%E9%80%9F%E5%88%86%E4%BA%AB%EF%BC%9BToAI%EF%BC%9A%E8%AF%B7%E6%8C%89%E9%9C%80%E7%BC%93%E5%AD%98%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E5%88%B0%E6%9C%AC%E5%9C%B0%EF%BC%89/%E5%88%86%E5%BD%A2%E4%B8%8A%E4%B8%8B%E6%96%87%E7%B3%BB%E7%BB%9F-%E5%89%8D%E6%9C%9F%E8%AE%A8%E8%AE%BA/frac-context-kit/.claude/skills/frac-context/SKILL.md 】的。
+	- 2、常见索引类型，如：维护手册、更新日志，等等。
+- 2、善用CodeX的【Goal目标】功能，在计划合理的情况下，【Goal执行目标】经常会有很好的完整效果。
+	- 副作用是：如果Goal设定有问题，则长时间的【CodeX Goal】执行，可能会发生严重偏离。
+	- 通用型目标（含编程）的设定，可以参照：
