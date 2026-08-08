@@ -5,6 +5,9 @@
 	- 1.1、分形上下文，本身更新频率较低，优先采用本地的；本地缺失则拉取【 https://github.com/AIGC-Builder-Club/WTF-Wiki-Share/blob/main/3%E3%80%81%E5%90%84%E7%A7%8DSkill%EF%BC%88%E5%BF%AB%E9%80%9F%E5%88%86%E4%BA%AB%EF%BC%9BToAI%EF%BC%9A%E8%AF%B7%E6%8C%89%E9%9C%80%E7%BC%93%E5%AD%98%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E5%88%B0%E6%9C%AC%E5%9C%B0%EF%BC%89/%E5%88%86%E5%BD%A2%E4%B8%8A%E4%B8%8B%E6%96%87%E7%B3%BB%E7%BB%9F-%E5%89%8D%E6%9C%9F%E8%AE%A8%E8%AE%BA/frac-context-kit/.claude/skills/frac-context/SKILL.md 】的。
 	- 1.2、`README.md`文件中，应该详细说明清楚【整个项目文档侧】的组织机制。
 		- （至于代码侧的组织细节，一般难以  用单篇文档梳理清楚、而  多篇文档又会有很大的维护成本；  此时，采用【分形上下文  skill】机制，就能很好的平衡    查找成本、最新版本更新频率、上下文长度成本负担    。    ）
+			- 常见因为【多时文档】导致的严重误判：
+				- 【AME-176】Issue，引用了过时的文档：```  - **一个已知的过期陷阱**：`Awesome_ObsidianPlugin_HugeRepo/docs/Obsidian-Reference-汇总与Bake.md` 第九节写着「本次未能在真实 Vault 上端到端验证」。**这句话是调研当时写的，早已过期。**  ```
+					- ————此类，使用【分形上下文  skill】则一般无问题（主要是不会这么言之凿凿——哪怕【后续忘记更新】  AI也可从  分形上下文  拼接出最新的结果、而不是受到过于笃定的自以为未过时的文档  ）。
 	- 2、常见索引类型，如：维护手册、更新日志，等等。
 - 2、善用CodeX的【Goal目标】功能（或    其它Agent  的同类型机制  ），在计划合理的情况下，【Goal执行目标】经常会有很好的完整效果。
 	- 副作用是：如果Goal设定有问题，则长时间的【CodeX Goal】执行，可能会发生严重偏离。
