@@ -17,6 +17,6 @@
 		- https://github.com/hanshou101/Obsidian_PublicGitHubShare_InsteadOf_FeiShu/blob/main/2%E3%80%81Goal%E5%88%B6%E5%AE%9A%E3%80%81%E5%BC%80%E6%94%BE%E6%8E%A2%E7%B4%A2%E5%9E%8BGoal%E3%80%81Spec%E5%88%87%E9%9D%A2%E5%93%B2%E5%AD%A6/%E5%85%B3%E4%BA%8EGoal%E5%92%8CSpec%E5%88%87%E9%9D%A2%E5%93%B2%E5%AD%A6%E7%9A%84%E7%BB%84%E5%90%88%EF%BC%88%E5%96%82%E7%BB%99GptPro%E4%BD%BF%E7%94%A8%EF%BC%89/%E3%80%8A%E7%AC%AC%E4%BA%8C%E7%AF%87%E3%80%8BKiroFold%20Single%20Spec%EF%BC%8CKiro%E5%8D%95%E6%96%87%E4%BB%B6%E7%89%88.md.md
 - 3、我的Obsidian作为AI平台
 	- 目前，我只有一个大的Vault————其下的很多子目录，作为单独的子  GitHub仓库。
-	- 目前，以【https://github.com/hanshou101/2A-META】为 AI-First 仓库，围绕其为核心打造。
-		- 【https://github.com/hanshou101/Awesome_ObsidianPlugin_HugeRepo】，为  包含多个SubModulde的【原生/二开Obsidian插件】的一个Macro仓库。
+	- 目前，以【 https://github.com/hanshou101/2A-META 】为 AI-First 仓库，围绕其为核心打造。
+		- 【 https://github.com/hanshou101/Awesome_ObsidianPlugin_HugeRepo 】，为  包含多个SubModulde的【原生/二开Obsidian插件】的一个Macro仓库。
 
