@@ -34,7 +34,10 @@
 					- 不能访问链接。
 						- `  Wait, the tools I have are "联网搜索 (web search)" and "当前时间 (current time)". I don't have a tool to directly read URLs. Hmm. Let me think about how to handle this.  `
 				- 腾讯元宝：
-					- 1、Hy3模型+深度思考————可以访问GitHub链接。
+					- 使用【超级元宝】吧！
+						- ————但是要注意，不能【放入分组】————这个是冲突。
+							- 1111
+					- （不太稳定——经常也不去深度思考）Hy3模型+深度思考————可以访问GitHub链接。
 						- Nice
 					- 2、DeepSeek模型+深度思考————可以访问GitHub链接。
 						- Nice
@@ -50,6 +53,30 @@
 				- （GLM-5.1  模型下）
 					- 发现——默认无法访问【GitHub链接】；只能访问    上传的PRD文件、Spec文件。
 
+
+
+- 试验案例
+	- （第一版，完全国产免费产品）踩坑
+		- 元宝对话
+			- "星座运势MVP开发需求"点击查看元宝的回答    https://yb.tencent.com/s/5wy5MMvuXyet
+		- 秒哒（改了3版，都已加入到    最新经验    ）
+			- 秒哒-无代码应用搭建平台，一句话做应用    https://www.miaoda.cn/projects/app-dnpb2us54su9?previousPage=%2F
+		- 灵光
+			- 灵光AI-蚂蚁旗下智能全模态AI助手    https://www.lingguang.com/chat?id=2d10b42c-e69a-4d38-be54-24463d542351
+	- 第一版似乎过于简单，体现不出实力：
+		- ————我们，去效仿一些产品吧
+			- 调研：
+				- 1
+		- 1
+		- 2
+		- 3
+		- 4
+		- 5
+		- 6
+		- 7
+		- 8
+		- 9
+		- 10
 
 # 
 
