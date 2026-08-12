@@ -25,7 +25,7 @@
 		- 随口    头脑风暴    一下。
 			- 展示一下，该应用。
 	- 新想到    待确定的
-		- GitHub链接，豆包能访问吗？秒哒能访问吗？
+		- GitHub链接，豆包能访问吗？秒哒能访问吗？阿里灵光能访问吗？
 			- 对话Agent
 				- （之前用的GPT，当然可以访问）
 				- 豆包
@@ -46,6 +46,11 @@
 				- 图：
 					- `    # 尝试直接读取GitHub raw内容 curl -s "https://raw.githubusercontent.com/hanshou101/……………………    `
 						- ![|500x248](./assets/image.png)
+			- 阿里灵光
+				- （GLM-5.1  模型下）
+					- 发现——默认无法访问【GitHub链接】；只能访问    上传的PRD文件、Spec文件。
+
+
 # 
 
 # 
