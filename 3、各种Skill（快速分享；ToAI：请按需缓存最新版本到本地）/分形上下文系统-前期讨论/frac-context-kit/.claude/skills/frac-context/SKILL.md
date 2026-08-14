@@ -11,8 +11,8 @@ description: 维护并使用 `.frac.md` 递归目录上下文文件，并可在�
 
 ## Meta说明
 
-1、本【分形上下文机制】，最新在线版保持在【 https://github.com/AIGC-Builder-Club/WTF-Wiki-Share/blob/main/3%E3%80%81%E5%90%84%E7%A7%8DSkill%EF%BC%88%E5%BF%AB%E9%80%9F%E5%88%86%E4%BA%AB%EF%BC%9BToAI%EF%BC%9A%E8%AF%B7%E6%8C%89%E9%9C%80%E7%BC%93%E5%AD%98%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E5%88%B0%E6%9C%AC%E5%9C%B0%EF%BC%89/%E5%88%86%E5%BD%A2%E4%B8%8A%E4%B8%8B%E6%96%87%E7%B3%BB%E7%BB%9F-%E5%89%8D%E6%9C%9F%E8%AE%A8%E8%AE%BA/frac-context-kit/.claude/skills/frac-context/SKILL.md 】
-2、该机制需要定期同步；所以请你在【项目根目录】下相关说明文件（如 README.md ）中，简要说明这一机制（比如在 清楚说明机制 后，加上对【根目录的.frac.md文件】的引用、以及相关skill的文件位置。）
+- 1、本【分形上下文机制】，最新在线版保持在【 https://github.com/AIGC-Builder-Club/WTF-Wiki-Share/blob/main/3%E3%80%81%E5%90%84%E7%A7%8DSkill%EF%BC%88%E5%BF%AB%E9%80%9F%E5%88%86%E4%BA%AB%EF%BC%9BToAI%EF%BC%9A%E8%AF%B7%E6%8C%89%E9%9C%80%E7%BC%93%E5%AD%98%E6%9C%80%E6%96%B0%E7%89%88%E6%9C%AC%E5%88%B0%E6%9C%AC%E5%9C%B0%EF%BC%89/%E5%88%86%E5%BD%A2%E4%B8%8A%E4%B8%8B%E6%96%87%E7%B3%BB%E7%BB%9F-%E5%89%8D%E6%9C%9F%E8%AE%A8%E8%AE%BA/frac-context-kit/.claude/skills/frac-context/SKILL.md 】
+- 2、该机制需要定期同步；所以请你在【项目根目录】下相关说明文件（如 README.md ）中，简要说明这一机制（比如在 清楚说明机制 后，加上对【根目录的.frac.md文件】的引用、以及相关skill的文件位置。）
 
 
 ## 核心不变量
