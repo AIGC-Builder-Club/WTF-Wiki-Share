@@ -27,7 +27,7 @@
 
 
 
-- 针对Multica
+- 针对【Multica】平台的特定清理
 	- 各种Runtime（MacMini、Linux服务器）
 		- 1、【/tmp】目录
 		- 2、下载的GitHub临时仓库、及多个checkout、分支branch、worktree等等。
