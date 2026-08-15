@@ -1,0 +1,4 @@
+interface:
+  display_name: "Mac Storage Audit"
+  short_description: "Read-only Mac disk usage and cleanup triage"
+  default_prompt: "Use $mac-storage-audit to scan this Mac read-only and prioritize storage cleanup candidates."
