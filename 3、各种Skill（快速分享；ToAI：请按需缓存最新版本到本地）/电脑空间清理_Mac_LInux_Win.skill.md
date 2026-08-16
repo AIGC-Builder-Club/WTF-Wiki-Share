@@ -1,3 +1,5 @@
+# 基本工具参考
+
 
 - 可参考的技能：
 	- 1
@@ -42,19 +44,18 @@
 
 ## 示例结果一：一台重负载的MacMini
 
-核心结论：这台 Mac mini 当前不紧急，APFS 容器约 228.3 GiB，已用 142.7 GiB（62.5%），可用 85.5 GiB；没有 Time Machine 本地快照，/private/tmp 和 VM/swap 也不是主因。
-- 已识别的低风险、可再生成缓存约 14.4 GiB；再加闲置项目 .next 等生成物约 3.2 GiB。两者是候选上限，仍需关闭对应应用、逐项确认。
-- 项目 node_modules 与 .venv 约 7.5 GiB，只有 lockfile/依赖清单完整且项目闲置时才可考虑重建。
-- 最大的人工审核项是 4 套 Codex home：57 个迁移/修复备份约 22.2 GiB、会话历史约 10.7 GiB、SQLite 数据库约 3.2 GiB。这是恢复点和用户历史，不能按年龄直接删除。
-- VS Code/Antigravity/Kiro 扩展合计约 5.8 GiB，应通过各编辑器管理旧版本；OpenCode 状态约 6.6 GiB 且当天仍活跃，不能直接动数据库或 storage。
-- Multica 权威统计为 58 个 task 目录约 4.21 GB，另有 8 个 repo cache 约 142 MB；57 个目录已有完成标记，但当前 artifact GC 可单独识别量为 0。应交给 Multica 生命周期/保留机制，不手工删 UUID workdir。
-- macOS TCC 阻止了 Mail、Messages、Safari、Trash、部分 Containers 等目录的完整计量，因此报告是已识别下限；APFS clone/硬链接也使各项数字不可直接相加。
-已在 workspace 创建可复用 skill：mac-storage-audit（ID：d6a7c561-792a-4370-ad1d-308101c7832b）。它包含 Python 3 标准库扫描器、APFS/Codex/项目/Multica 分类规则，且刻意不包含删除实现。self-test、官方 skill 校验和本机真实运行均已通过。
-
-附件：
-- mac-storage-analysis-2026-08-15.md：完整中文分析、目录分级、交叉核验、后续优先级与覆盖限制。
-- mac-storage-audit.skill：可导入归档；workspace 中也已注册同名 skill。
-	- 见  [mac-storage-audit/SKILL.md](Root/_外部Publish/3、各种Skill（快速分享；ToAI：请按需缓存最新版本到本地）/电脑空间清理_Mac_LInux_Win.skill/mac-storage-audit/SKILL.md)
+- 核心结论：这台 Mac mini 当前不紧急，APFS 容器约 228.3 GiB，已用 142.7 GiB（62.5%），可用 85.5 GiB；没有 Time Machine 本地快照，/private/tmp 和 VM/swap 也不是主因。
+	- 已识别的低风险、可再生成缓存约 14.4 GiB；再加闲置项目 .next 等生成物约 3.2 GiB。两者是候选上限，仍需关闭对应应用、逐项确认。
+	- 项目 node_modules 与 .venv 约 7.5 GiB，只有 lockfile/依赖清单完整且项目闲置时才可考虑重建。
+	- 最大的人工审核项是 4 套 Codex home：57 个迁移/修复备份约 22.2 GiB、会话历史约 10.7 GiB、SQLite 数据库约 3.2 GiB。这是恢复点和用户历史，不能按年龄直接删除。
+	- VS Code/Antigravity/Kiro 扩展合计约 5.8 GiB，应通过各编辑器管理旧版本；OpenCode 状态约 6.6 GiB 且当天仍活跃，不能直接动数据库或 storage。
+	- Multica 权威统计为 58 个 task 目录约 4.21 GB，另有 8 个 repo cache 约 142 MB；57 个目录已有完成标记，但当前 artifact GC 可单独识别量为 0。应交给 Multica 生命周期/保留机制，不手工删 UUID workdir。
+	- macOS TCC 阻止了 Mail、Messages、Safari、Trash、部分 Containers 等目录的完整计量，因此报告是已识别下限；APFS clone/硬链接也使各项数字不可直接相加。
+- 已在 workspace 创建可复用 skill：mac-storage-audit（ID：d6a7c561-792a-4370-ad1d-308101c7832b）。它包含 Python 3 标准库扫描器、APFS/Codex/项目/Multica 分类规则，且刻意不包含删除实现。self-test、官方 skill 校验和本机真实运行均已通过。
+- 附件：
+	- mac-storage-analysis-2026-08-15.md：完整中文分析、目录分级、交叉核验、后续优先级与覆盖限制。
+	- mac-storage-audit.skill：可导入归档；workspace 中也已注册同名 skill。
+		- 见  [mac-storage-audit/SKILL.md](Root/_外部Publish/3、各种Skill（快速分享；ToAI：请按需缓存最新版本到本地）/电脑空间清理_Mac_LInux_Win.skill/mac-storage-audit/SKILL.md)
 
 
 
