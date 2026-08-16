@@ -1,4 +1,4 @@
-参考资料：
+3、参考资料：
 - https://chatgpt.com/share/6a3e1d06-21a8-83ee-9234-711716b7fd36
 - 附件包：
 	- 见《CodeX_AppServer_Goal_WatchDog》目录。

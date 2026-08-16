@@ -1,4 +1,4 @@
-# 极简方案-采用CodeX内置的自动化Automation
+# 2、极简方案-采用CodeX内置的自动化Automation
 
 - 正常点击【CodeX的自动化Automation】，点击【创建】，就会显示：
 	- `  我们一起来设置一个已安排任务吧。首先，说明已安排任务在 ChatGPT 中的工作方式。然后询问我需要安排什么，以及应该在什么时候运行。  `
@@ -225,7 +225,7 @@
 
 - 最后生成的产物，示例【`  .codex/automations/goal-019f8d10/automation.toml  `】：    （时间，可以改一下；【5分钟】还是太密集了。改为20分钟吧    ）
 	- 另外，还产生了一个需要引用的【mjs脚本】——通过桌面端同版本  ` Codex App Server 执行：thread/goal/get → thread/goal/set → thread/goal/get `  
-		- [/Users/ycw/.codex/automations/goal-019f8d10/thread_goal_rpc.mjs  已备份到本GitHub目录下](Root/_外部Publish/日常群聊分享/CodeX_Goal的无限重连_方案调研/极简方案-采用CodeX内置的自动化Automation/thread_goal_rpc.mjs)
+		- [/Users/ycw/.codex/automations/goal-019f8d10/thread_goal_rpc.mjs  已备份到本GitHub目录下](Root/_外部Publish/日常群聊分享/CodeX_Goal的无限重连_方案调研/2、极简方案-采用CodeX内置的自动化Automation/thread_goal_rpc.mjs)
 			- 省略 objective 和 tokenBudget，不会重置目标或用量。
 			- 只允许 blocked → active；active 幂等跳过，paused/complete/UNKNOWN 拒绝修改。
 
@@ -253,7 +253,7 @@
 		- 重新调整了部分顺序，让【目标主力任务的ID】只出现一次。（便于配置）
 		- 然后发现，————无法【监控多个任务】、
 			- 无法【监控所有进行中的Goal任务（我觉得，这个还是有必要的。）】、
-				- 已完成：    [对现有Goal的所有阻塞状态分析](Root/_外部Publish/日常群聊分享/CodeX_Goal的无限重连_方案调研/极简方案-采用CodeX内置的自动化Automation/对现有Goal的所有阻塞状态分析.md)
+				- 已完成：    [对现有Goal的所有阻塞状态分析](Root/_外部Publish/日常群聊分享/CodeX_Goal的无限重连_方案调研/2、极简方案-采用CodeX内置的自动化Automation/对现有Goal的所有阻塞状态分析.md)
 	- v2版本
 		- …………  运行似乎还算正常，再观察一阵子。
 		- 1
