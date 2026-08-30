@@ -6,7 +6,7 @@
 
 Qwen3.5-27B 推出后就非常受欢迎，Hugging Face 上也涌现了很多基于它的微调版本，普遍认为它的性能相当强。升级到上个月发布的 Qwen3.6-27B 之后，它被定位为旗舰级、可在本地运行的智能体编程模型，关键看点在于用一个 27B 的稠密模型去挑战前代 397B MoE 的旗舰模型（Qwen3.5-397B-A17B）。
 
-![|500x281](./assets/image.png)
+![|500x281](Root/_外部Publish/1、调研文章-存证/assets/image.png)
 
   
 
@@ -18,7 +18,7 @@ Qwen3.5-27B 推出后就非常受欢迎，Hugging Face 上也涌现了很多基�
 
 我在上个月就尝试在本地跑这个模型。一开始用的是 Unsloth 出品的动态量化 Q5、GGUF 格式版本，当时生成速度大约是 18 tok/s，模型一跑起来风扇就呼啦呼啦地响。
 
-![|304](./assets/image-1.png)
+![|304](Root/_外部Publish/1、调研文章-存证/assets/image-1.png)
 
 Mac 端和 Windows 端的体验差异很大。在 Windows 上，很多用户用 3090 或 4090 就可以很顺畅地跑 Qwen3.6-27B，速度也挺快。但在 Mac 上跑这样的稠密模型，一方面速度普遍偏慢，另一方面可选的后端实在太多了。
 
@@ -30,21 +30,21 @@ Mac 端和 Windows 端的体验差异很大。在 Windows 上，很多用户用 
 
 https://huggingface.co/Youssofal/models
 
-![|363](./assets/image-2.png)
+![|363](Root/_外部Publish/1、调研文章-存证/assets/image-2.png)
 
 ## 三、社区里的几位实践者
 
 知名开发者 Ivan Fioravanti 围绕 27B 做了非常多的分享。他用 DFlash-mlx 搭配 Z Lab 出品的 draft 模型，初步测试下来认为 DFlash 明显比单独使用 MTP 更快，但在质量上观察到了一些退化。
 
-![|247](./assets/image-3.png)
+![|247](Root/_外部Publish/1、调研文章-存证/assets/image-3.png)
 
 他还分享了对 MTPLX 最新 0.3.5 版本的测试体验：在一个数学基准测试上，5 小时 30 分钟内取得了 93.3% 的正确率，在他看来 MTPLX 的输出质量是相当不错的。
 
-![|243](./assets/image-4.png)
+![|243](Root/_外部Publish/1、调研文章-存证/assets/image-4.png)
 
 另外一个机构 AtomicChat 则在 llama.cpp 上为 Qwen 实现了 MTP。
 
-![|272](./assets/image-5.png)
+![|272](Root/_外部Publish/1、调研文章-存证/assets/image-5.png)
 ![图片](data:image/svg+xml,%3C%3Fxml%20version='1.0'%20encoding='UTF-8'%3F%3E%3Csvg%20width='1px'%20height='1px'%20viewBox='0%200%201%201'%20version='1.1'%20xmlns='http://www.w3.org/2000/svg'%20xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Ctitle%3E%3C/title%3E%3Cg%20stroke='none'%20stroke-width='1'%20fill='none'%20fill-rule='evenodd'%20fill-opacity='0'%3E%3Cg%20transform='translate\(-249.000000,%20-126.000000\)'%20fill='%23FFFFFF'%3E%3Crect%20x='249'%20y='126'%20width='1'%20height='1'%3E%3C/rect%3E%3C/g%3E%3C/g%3E%3C/svg%3E)
 
   
@@ -54,7 +54,7 @@ https://huggingface.co/Youssofal/models
 我还看到一位博主用 MTPLX 加 4bit 模型，做出了一个内容非常丰富的城市场景游戏：里面有大量建筑、小车、广场、树木、道路，还有很大的广告牌，大概率不是一次迭代生成的。镜头里能看到健身房、电影院、教室等多种场景，都做得相当不错。
 
 
-![|272](./assets/image-6.png)
+![|272](Root/_外部Publish/1、调研文章-存证/assets/image-6.png)
 ## 四、四个渠道的实测对比
 
 接下来分享我通过四个不同渠道使用 Qwen3.6-27B 的效果。
@@ -125,7 +125,7 @@ MTPLX 的安装挺简单：先用 `brew install` 装好，再通过 `mtplx st
 
 我选择了它的 WebUI 打开测试，随便提了一个问题，输出速度是 43.6 tok/s。
 
-![|222](./assets/image-7.png)
+![|222](Root/_外部Publish/1、调研文章-存证/assets/image-7.png)
 
 左侧可以调整模型参数——如果是编码任务用 0.6，做一般任务时 Qwen 官方建议把温度调到 1。
 
@@ -149,7 +149,7 @@ MTPLX 的安装挺简单：先用 `brew install` 装好，再通过 `mtplx st
 
 写作任务：让它写一个不超过 300 字的微型悬疑故事，效果还不错。
 
-![|207](./assets/image-8.png)
+![|207](Root/_外部Publish/1、调研文章-存证/assets/image-8.png)
 
 推理题：假设月收入 7000、生活在一线城市、没有存款，想在 4 年内存够 60 万，请给出一个计划。它思考了 1 分钟，最终给出了一份内容非常详尽的回复。我让 GPT-5.5 thinking 给它打分，结果是 50 多分；同样的题目让 GPT-5.5 Pro 做了一遍，再由 GPT-5.5 thinking 来打分，得到了 82 分。可以看到，27B 在推理上和 GPT 的顶尖模型还是有差距的，但在我看来已经很不错。
 
@@ -157,11 +157,11 @@ MTPLX 的安装挺简单：先用 `brew install` 装好，再通过 `mtplx st
 
 一些小题：把"他很难过"写成一句有画面感的话，不超过 30 字，它的回答是"他蜷在墙角，把脸埋进臂弯，肩膀无声地起伏"——质量很不错。咖啡店新品广告语写的是"新豆初焙，苦甜有分寸"，感觉比较一般。
 
-![|196](./assets/image-9.png)
+![|196](Root/_外部Publish/1、调研文章-存证/assets/image-9.png)
 
 让它写一段 100 字以内的小故事，结尾必须反转，但不能像段子，27B 写道："他每晚都坐在椅子右端，静候路口。直到今天，他终于起身，指尖触到刚铺好的白砖——原来他等的不是归人，是这条竣工的盲道。" 挺有意思，但可能没那么有意思。
 
-![|198](./assets/image-10.png)
+![|198](Root/_外部Publish/1、调研文章-存证/assets/image-10.png)
 
 再让它写一段表达"终于辞职了"的文案，要求洒脱、不抱怨，它写的是："交还钥匙，清空日程，不回头谢幕，只向前迎风。原来转身，也可以这么轻。" 还挺好的，至少不是 AI 味很浓的话。
 

@@ -96,7 +96,7 @@ Settings → Secrets and variables → Actions → New repository secret
 ORG_PUSH_TOKEN
 ```
 
-（获取方式，见：    [fine-grained PAT 的创建](Root/_外部Publish/日常群聊分享/【个人仓库】与【Org组织仓库】，实现打通和同步，以及相关Action配置.md#fine-grained%20PAT%20的创建)    ）
+（获取方式，见：    [fine-grained PAT 的创建](Root/_外部Publish/4.2、日常群聊分享/【个人仓库】与【Org组织仓库】，实现打通和同步，以及相关Action配置.md#fine-grained%20PAT%20的创建)    ）
 （一般来说，你需要单独   记录这个值，以防丢失。通常ta的格式是：`  github_pat_xxxxxxxxxxxx  `）
 
 这个 token 最好用 fine-grained PAT，只给目标组织仓库 `ORG_NAME/REPO_NAME` 的 `Contents: Read and write` 权限。GitHub 文档说明 fine-grained PAT 可以限制到单个 owner、指定仓库和细粒度权限；Actions secrets 也支持在仓库级别保存给 workflow 使用。
