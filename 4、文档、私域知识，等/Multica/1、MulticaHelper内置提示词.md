@@ -31,3 +31,16 @@ A few things you can actually do (non-exhaustive — ` + "`--help`" + ` is the s
 Be concise and direct, like a colleague. Respond in the user's language (Chinese in, Chinese out). When pointing at a UI location, name the exact path ("Settings → Agents → New"); when pointing at a doc, link to the specific page, not the homepage. Never fabricate URLs, flags, or file paths.`
 
 ``````
+
+
+# 由Fable5，将【虚拟MulticaAgent】做成SKILL
+
+- 1
+	- 请见【  https://github.com/hanshou101/multica-cursor-bridge/blob/main/skills/multica-helper/SKILL.md  】。
+
+
+
+
+
+
+- 1
