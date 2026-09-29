@@ -120,6 +120,11 @@ class FracProject:
         self.fracignore_patterns = self._load_fracignore()
         self._eligible_files: Optional[Set[Path]] = None
         self._eligible_dirs: Optional[Set[Path]] = None
+        # 性能缓存（语义不变）：is_ignored 的结果，以及「父目录 -> 直属文件 / 直属子目录」索引。
+        # 没有它们时，每次 inputs/status 都会对整棵树重复 resolve()；几千个文件的树上一次 status 要跑数分钟。
+        self._ignore_cache: Dict[str, bool] = {}
+        self._files_by_parent: Optional[Dict[Path, List[Path]]] = None
+        self._dirs_by_parent: Optional[Dict[Path, List[Path]]] = None
 
     # ---------- path helpers ----------
 
@@ -193,7 +198,11 @@ class FracProject:
         return False
 
     def _matches_fracignore(self, path: Path) -> bool:
-        rel = path.resolve().relative_to(self.root).as_posix()
+        if not self.fracignore_patterns:
+            return False
+        rel_path = path.resolve().relative_to(self.root)
+        rel = rel_path.as_posix()
+        parts = rel_path.parts
         name = path.name
         is_dir = path.is_dir()
         for pat in self.fracignore_patterns:
@@ -202,7 +211,7 @@ class FracProject:
             if dir_pat:
                 if is_dir and (name == clean or rel == clean or rel.startswith(clean + "/")):
                     return True
-                if any(part == clean for part in path.resolve().relative_to(self.root).parts):
+                if any(part == clean for part in parts):
                     return True
             else:
                 if fnmatch.fnmatch(rel, clean) or fnmatch.fnmatch(name, clean):
@@ -210,9 +219,16 @@ class FracProject:
         return False
 
     def is_ignored(self, path: Path) -> bool:
+        key = str(path)
+        cached = self._ignore_cache.get(key)
+        if cached is not None:
+            return cached
         if path.resolve() == self.root:
-            return False
-        return self._is_default_ignored(path) or self._matches_fracignore(path)
+            result = False
+        else:
+            result = self._is_default_ignored(path) or self._matches_fracignore(path)
+        self._ignore_cache[key] = result
+        return result
 
     def _git_eligible_files(self) -> Optional[Set[Path]]:
         if not self.respect_gitignore:
@@ -309,20 +325,33 @@ class FracProject:
 
     # ---------- input model ----------
 
+    def _build_parent_index(self) -> None:
+        """一次性建立「父目录 -> 直属文件 / 直属子目录」索引；结果与逐次扫描整棵树相同。"""
+        files_by_parent: Dict[Path, List[Path]] = {}
+        for f in self.eligible_files():
+            files_by_parent.setdefault(f.parent.resolve(), []).append(f)
+        dirs_by_parent: Dict[Path, List[Path]] = {}
+        for d in self.eligible_dirs():
+            if d == self.root:
+                continue
+            dirs_by_parent.setdefault(d.parent.resolve(), []).append(d)
+        self._files_by_parent = files_by_parent
+        self._dirs_by_parent = dirs_by_parent
+
     def direct_files(self, directory: Path) -> List[Path]:
         directory = directory.resolve()
-        files = [
-            f for f in self.eligible_files()
-            if f.parent.resolve() == directory and f.name != FRAC_NAME
-        ]
+        if self._files_by_parent is None:
+            self._build_parent_index()
+        assert self._files_by_parent is not None
+        files = [f for f in self._files_by_parent.get(directory, []) if f.name != FRAC_NAME]
         return sorted(files, key=lambda p: p.name.lower())
 
     def direct_child_dirs(self, directory: Path) -> List[Path]:
         directory = directory.resolve()
-        children = [
-            d for d in self.eligible_dirs()
-            if d != directory and d.parent.resolve() == directory
-        ]
+        if self._dirs_by_parent is None:
+            self._build_parent_index()
+        assert self._dirs_by_parent is not None
+        children = [d for d in self._dirs_by_parent.get(directory, []) if d != directory]
         return sorted(children, key=lambda p: p.name.lower())
 
     def inputs_for_dir(self, directory: Path) -> DirInputs:
