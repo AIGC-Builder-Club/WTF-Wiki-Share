@@ -2,9 +2,14 @@
 
 When working in this repository, use the `frac-context` skill.
 
-Before editing a file, run the frac chain command for the target path and read the listed `.frac.md` files from root to target.
+Before editing a file, run the frac chain command for the target path and read the listed `.frac.md` files from root to target. Read the same chain once per task.
 
-After editing files, run the frac plan command and update stale `.frac.md` files bottom-up.
+Do not update `.frac.md` while working. A `.frac.md` that lags behind the code mid-task is expected; your own changes are in your conversation.
+
+At wrap-up (code and tests settled, before committing), run `frac.py plan . --final` once and go through the list bottom-up:
+- the directory's map changed (responsibilities, file roles, interfaces, constraints): rewrite that `.frac.md` as the current state, within its budget (`frac.py inputs <dir>` shows it);
+- nothing at that level changed: `frac.py confirm <dir>` (mtime only; ancestors that were fresh follow).
+Finish with `frac.py check . --changed`.
 
 Core rule:
 
@@ -13,6 +18,8 @@ A directory .frac.md summarizes only:
 1. direct eligible files in that directory
 2. immediate child directories' .frac.md files
 ```
+
+One `.frac.md` stays under 10 KiB. Do not write version history, dates, test counts, line numbers, commit ids or quotes into it.
 
 Do not read grandchildren source files while updating a parent `.frac.md`.
 Do not build a context pack, vector index, repo cognition cache, or knowledge graph.
