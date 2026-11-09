@@ -166,7 +166,7 @@ python .claude/skills/frac-context/scripts/frac.py confirm <dir> [<dir> ...]
 ```text
 硬上限 = 10 KiB（10,240 字节，按 UTF-8 计；中文约 3,400 字）
 预算   = min(10 KiB, 2 KiB + 直属条目数 × 340 B)
-直属条目数 = 直属有效文件数 + 直属子目录数（与 inputs 的口径一致）
+直属条目数 = 直属有效文件数 + 直属子目录数 + 直属的 git 子模块数（与 inputs 的口径一致）
 ```
 
 | 直属条目 | 预算 |
@@ -235,3 +235,5 @@ python .claude/skills/frac-context/scripts/frac.py check . --changed
 ```
 
 本轮改过的 `.frac.md` 没有超过硬上限，才算收尾完成。去掉 `--changed` 检查全部（可接进 CI 或 pre-commit）。
+
+`check` 还会列出“已经不参与、可以删”的 `.frac.md`：skill 副本里的（skill 不进 `.frac.md` 树），以及目录里除了它什么都没有的。删掉即可，不用改写。

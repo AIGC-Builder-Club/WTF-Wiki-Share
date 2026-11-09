@@ -41,11 +41,21 @@ stale(D) ⇔  .frac.md 缺失 或 任一输入比它更新
 
 目录条目的 mtime 也视为输入，因此可以检测直接文件的新增、删除或重命名操作。
 
+仓库里的 frac-context skill 副本（例如 `.claude/skills/frac-context/`）不进 `.frac.md` 树：它的说明就是这份 SKILL.md，内容由自动更新维护。
+
 ## 三条规矩（先看这里）
 
 1. **只在收尾时更新。** 代码和测试都定了、提交之前，跑一次 `plan . --final`，照清单一次做完。中途不为对齐去跑 `status` / `plan`，也不改 `.frac.md`：中途写的会被后面的改动推翻；每多读写一份，上下文就大一圈、整轮就长一截（Claude Code 主对话的缓存 1 小时过期，拖得越久越贵）。中途读到 `.frac.md` 和代码对不上是正常的：它只在收尾时追上，你这次改了什么，你的对话里都有，以代码和你自己的改动为准。
-2. **单份有上限。** 硬上限 10 KiB（10,240 字节，按 UTF-8 计；中文约 3,400 字）。每个目录另有预算：2 KiB 起，每个直属条目（直属文件 + 直属子目录）加 340 B，25 项起封顶 10 KiB——简单目录 2~5 KiB，大目录 5~10 KiB。`frac.py` 每次都量：超过硬上限，`check` 不通过、`confirm` 拒绝；超过预算或接近预算会提示。超了先删易变内容和细节；直属文件多就按功能分组写（一组一行）；只有拆目录不用改配置、打包、路径时才拆目录。
+2. **单份有上限。** 硬上限 10 KiB（10,240 字节，按 UTF-8 计；中文约 3,400 字）。每个目录另有预算：2 KiB 起，每个直属条目（直属文件、直属子目录、git 子模块）加 340 B，25 项起封顶 10 KiB——简单目录 2~5 KiB，大目录 5~10 KiB。`frac.py` 每次都量：超过硬上限，`check` 不通过、`confirm` 拒绝；超过预算或接近预算会提示。超了先删易变内容和细节；直属文件多就按功能分组写（一组一行）；只有拆目录不用改配置、打包、路径时才拆目录。
 3. **不写会过时的东西。** 不写版本史（“0.32.0 起……”）、日期和“最近更新”、测试/检查有几条、行号和行数、提交号和评论号、用户原话、函数参数和默认值的细目。`.frac.md` 写“现在是什么”：职责、文件分工、对外接口、约束、什么时候下钻。历史在 git log，数字在代码和测试里。
+
+## 自动更新
+
+`frac.py` 每个命令跑完，会顺路查上游有没有新版（每台机器最多每小时联网一次，离线就跳过）；有，就把这份 skill 换成新版：每个文件都校验 sha256，本地改过的文件不覆盖，仓库自己的 `.frac.md` 不动。
+
+- stderr 里出现“frac-context 已自动更新”：这次命令还是旧版跑的。先重读本文件（规矩可能变了）再继续；换下来的 skill 文件跟你这次的改动一起提交。
+- 出现“本地改过……没有自动覆盖”：有人改过这份副本。确认不要那些改动，再 `frac.py update --force`；拿不准就留着，在交付里说一句。
+- `frac.py version` 看版本和上次检查结果，`frac.py update [--check]` 立刻查。`FRAC_UPDATE=notify` 只提示不换，`FRAC_UPDATE=off` 不联网（CI、离线环境）。
 
 ## Coding之前
 
@@ -136,6 +146,10 @@ python .claude/skills/frac-context/scripts/frac.py stamp_for_clone .
 
 # 仅在明确手动调用时，汇总全部 .frac.md 正文
 python .claude/skills/frac-context/scripts/frac.py bundle .
+
+# 版本与自动更新状态；立刻查上游（--check 只报告，--force 连本地改过的也覆盖）
+python .claude/skills/frac-context/scripts/frac.py version
+python .claude/skills/frac-context/scripts/frac.py update [--check] [--force]
 ```
 
 `status`、`plan`、`chain`、`inputs` 会把调用时间记在 git 目录里（`git rev-parse --git-path frac-context-usage.json`，不进工作区），用来提醒“一小时内查了好几次”；设环境变量 `FRAC_USAGE_LOG=0` 可关掉。
