@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-import shutil
+import os
 import subprocess
 import sys
 import tempfile
@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 FRAC = ROOT / ".claude" / "skills" / "frac-context" / "scripts" / "frac.py"
 BUNDLE_NAME = ".frac.全部汇总超大.md"
+os.environ["FRAC_UPDATE"] = "off"  # 测试不联网、不自更新
 
 
 def run(args, cwd):

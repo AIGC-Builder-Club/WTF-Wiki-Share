@@ -7,7 +7,6 @@ Standard library only. Git-dependent parts are skipped when git is not installed
 
 from __future__ import annotations
 
-import importlib.util
 import json
 import os
 import shutil
@@ -21,11 +20,11 @@ ROOT = Path(__file__).resolve().parents[1]
 FRAC = ROOT / ".claude" / "skills" / "frac-context" / "scripts" / "frac.py"
 
 sys.dont_write_bytecode = True  # 不在 scripts/ 里留下 __pycache__
-spec = importlib.util.spec_from_file_location("frac_module", FRAC)
-frac = importlib.util.module_from_spec(spec)
-sys.modules["frac_module"] = frac
-assert spec.loader is not None
-spec.loader.exec_module(frac)
+sys.path.insert(0, str(FRAC.parent))
+from fraclib.budget import SizeBudget  # noqa: E402
+from fraclib.lint import lint_counts, lint_frac_text  # noqa: E402
+
+os.environ["FRAC_UPDATE"] = "off"  # 测试不联网、不自更新
 
 HAS_GIT = shutil.which("git") is not None
 
@@ -81,7 +80,7 @@ def make_project(base: Path) -> Path:
 
 
 def test_budget_engine() -> None:
-    b = frac.SizeBudget()
+    b = SizeBudget()
     assert b.cap == 10 * 1024
     assert b.budget(0) == 2048
     assert b.budget(1) == 2048 + 340
@@ -110,8 +109,8 @@ def test_lint() -> None:
         "npm i foo@1.2.3  # 代码块里的不查",
         "```",
     ])
-    hits = frac.lint_frac_text(text)
-    counts = frac.lint_counts(hits)
+    hits = lint_frac_text(text)
+    counts = lint_counts(hits)
     assert counts.get("version") == 2, counts
     assert counts.get("date") == 1, counts
     assert counts.get("count") == 3, (counts, [h for h in hits if h.kind == "count"])
@@ -121,7 +120,7 @@ def test_lint() -> None:
     assert not any(h.line == 5 and h.kind == "count" for h in hits), "AME-360 is an id, not a count"
     assert not any(h.line >= 9 for h in hits), "code blocks are skipped"
     clean = "# .frac.md — src\n\n- `login.ts`：提供 `login()`，校验凭据并创建会话。\n"
-    assert frac.lint_frac_text(clean) == []
+    assert lint_frac_text(clean) == []
 
 
 def test_check_and_inputs_budget(base: Path) -> None:
@@ -209,6 +208,63 @@ def git(project: Path, *args: str) -> None:
     subprocess.run(["git", "-C", str(project), *args], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
+def test_vendored_skill_and_removable(base: Path, use_git: bool) -> None:
+    """仓库里的 frac-context 副本不进 .frac.md 树；.fracignore 的多段目录连文件一起管住；check 列出可删的。"""
+    project = make_project(base)
+    skill = project / ".claude" / "skills" / "frac-context"
+    shutil.copytree(FRAC.parent.parent, skill, ignore=shutil.ignore_patterns("__pycache__"))
+    write(skill / ".frac.md", frac_doc(".claude/skills/frac-context"))
+    write(skill / "scripts" / ".frac.md", frac_doc(".claude/skills/frac-context/scripts"))
+    write(project / ".claude" / "skills" / ".frac.md", frac_doc(".claude/skills"))
+    write(project / ".fracignore", "docs/gen/\n")
+    write(project / "docs" / "guide.md", "# guide\n")
+    write(project / "docs" / "gen" / "api.md", "# generated\n")
+    write(project / "docs" / ".frac.md", frac_doc("docs"))
+    if use_git:
+        git(project, "init", "-q")
+        git(project, "add", "-A")
+        # 一个没签出的子模块：vendor/ 里只有它的挂载点和 vendor/.frac.md
+        (project / "vendor" / "libx").mkdir(parents=True)
+        write(project / "vendor" / ".frac.md", frac_doc("vendor", "子模块 libx。"))
+        git(project, "add", "vendor/.frac.md")
+        git(project, "update-index", "--add", "--cacheinfo", "160000," + "1" * 40 + ",vendor/libx")
+        git(project, "-c", "user.name=t", "-c", "user.email=t@example.com", "commit", "-q", "-m", "init")
+    run(["stamp_for_clone", "."], project)
+
+    own = skill / "scripts" / "frac.py"
+    for script in (FRAC, own):  # 外面的 kit 副本靠目录探测，仓库自己的副本还认得自己
+        out = subprocess.run([sys.executable, str(script), "status", ".", "--json"], cwd=str(project),
+                             text=True, encoding="utf-8", stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        dirs = {item["directory"] for item in json.loads(out.stdout)}
+        assert not any(d.startswith(".claude/skills/frac-context") for d in dirs), dirs
+        assert "docs/gen" not in dirs and "docs" in dirs, dirs
+
+    data = json.loads(run(["check", ".", "--json"], project, stdout_only=True))
+    assert data["removable"] == [
+        ".claude/skills/frac-context/.frac.md",
+        ".claude/skills/frac-context/scripts/.frac.md",
+        ".claude/skills/.frac.md",
+    ], data["removable"]
+    out = run(["check", "."], project)
+    assert "可以删的 .frac.md" in out and ".claude/skills/.frac.md" in out
+    if use_git:  # 子模块挂载点算直属条目：vendor/.frac.md 不是“只剩 .frac.md”
+        out = run(["inputs", "vendor"], project)
+        assert "SUBMODULES:" in out and "vendor/libx" in out, out
+        assert "直属 1 项" in out, out
+
+    # 自动更新改到 skill 副本、或生成目录里多了文件，都不让任何 .frac.md 变旧。
+    before = {d: item["state"] for d, item in states(project).items()}
+    write(skill / "references" / "frac-template.md", "# 新版模板\n")
+    write(project / "docs" / "gen" / "api2.md", "# more\n")
+    set_mtime(skill / "references" / "frac-template.md", 5)
+    set_mtime(project / "docs" / "gen" / "api2.md", 5)
+    after = {d: item["state"] for d, item in states(project).items()}
+    assert after == before, (before, after)
+    if use_git:
+        plan = json.loads(run(["plan", ".", "--changed", "--json"], project, stdout_only=True))
+        assert plan == [], plan
+
+
 def test_git_reminders(base: Path) -> None:
     project = make_project(base)
     git(project, "init", "-q")
@@ -260,8 +316,10 @@ def main() -> None:
         test_plan_final_and_confirm(Path(td) / "b")
         test_confirm_refuses_and_stops(Path(td) / "c")
         test_chain_notes(Path(td) / "d")
+        test_vendored_skill_and_removable(Path(td) / "f", use_git=False)
         if HAS_GIT:
             test_git_reminders(Path(td) / "e")
+            test_vendored_skill_and_removable(Path(td) / "g", use_git=True)
         else:
             print("skip: git not installed")
     print("ok")

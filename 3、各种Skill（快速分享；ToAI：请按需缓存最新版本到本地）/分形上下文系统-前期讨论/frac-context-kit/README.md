@@ -38,8 +38,17 @@ frac-context-kit/
     skills/
       frac-context/
         SKILL.md
+        manifest.json          版本号 + 每个文件的 sha256（自动更新用）
         scripts/
-          frac.py
+          frac.py              入口：命令行参数与分派；每个命令跑完顺路查更新
+          fraclib/
+            project.py         目录树：哪些目录要有 .frac.md、输入、新鲜度、顺序、链、mtime、汇总
+            budget.py          计算引擎：单份 .frac.md 的硬上限与预算
+            lint.py            易变内容检查
+            wrapup.py          收尾：清单、confirm、check、可删的 .frac.md
+            usage.py           调用记录与提醒
+            update.py          自动更新，以及 version / update / manifest 命令
+            report.py          文本与 JSON 输出
         references/
           frac-template.md
           update-rules.md
@@ -50,6 +59,7 @@ frac-context-kit/
   tests/
     test_frac_smoke.py
     test_frac_budget.py
+    test_frac_update.py
 ```
 
 ---
@@ -75,7 +85,7 @@ CLAUDE.md.example  ->  CLAUDE.md
 python .claude/skills/frac-context/scripts/frac.py status .
 ```
 
-已经装过旧版的项目，整个目录覆盖即可；命令和参数都向下兼容。项目 README 里那段说明照下面“项目 README 里怎么写”改一下。
+已经装过旧版的项目，整个目录覆盖即可；命令和参数都向下兼容。项目 README 里那段说明照下面“项目 README 里怎么写”改一下。2.1 起装好之后会自己跟上新版，见“自动更新”。
 
 ---
 
@@ -230,7 +240,7 @@ python .claude/skills/frac-context/scripts/frac.py bundle examples/minimal-proje
 ```text
 硬上限 = 10 KiB（10,240 字节，按 UTF-8 计；中文约 3,400 字）
 预算   = min(10 KiB, 2 KiB + 直属条目数 × 340 B)
-直属条目数 = 直属有效文件数 + 直属子目录数
+直属条目数 = 直属有效文件数 + 直属子目录数 + 直属的 git 子模块数
 ```
 
 | 直属条目 | 预算 |
@@ -245,7 +255,7 @@ python .claude/skills/frac-context/scripts/frac.py bundle examples/minimal-proje
 
 `frac.py` 每次运行都量：超过硬上限，`check` 不通过、`confirm` 拒绝；超过预算提示压缩；到预算 85% 提示“接近”。超了先删易变内容和细节；直属文件多就按功能分组写；只有拆目录不用改配置、打包、路径时才拆目录。
 
-常量在 `frac.py` 开头（`HARD_CAP_BYTES`、`BUDGET_BASE_BYTES`、`BUDGET_PER_ENTRY_BYTES`）。
+常量和算法在 `scripts/fraclib/budget.py`（`HARD_CAP_BYTES`、`BUDGET_BASE_BYTES`、`BUDGET_PER_ENTRY_BYTES`、`SizeBudget`）。
 
 ---
 
@@ -278,6 +288,43 @@ git rev-parse --git-path frac-context-usage.json
 
 ---
 
+## 自动更新
+
+`frac.py` 的每个命令跑完，都会顺路看一眼上游（本 kit 在 GitHub main 上的 `.claude/skills/frac-context/`）有没有新版：
+
+- 每台机器最多每小时联网查一次，结果记在 `~/.cache/frac-context/update-check.json`，同一台机器上的各个仓库共用；离线、超时（4 秒）都静默跳过，命令本身照常。
+- 有新版，就把 skill 目录里内容不同的文件换成新版：每个文件都要对上 `manifest.json` 里的 sha256，`.py` 还要能编译，全部通过才替换；任何一步不过，保留旧版，15 分钟后再试。新版不再有的文件会删掉。
+- 只动 `manifest.json` 列出的文件：仓库自己放在 skill 目录里的东西不动。本地改过的文件（和本地 `manifest.json` 对不上）不自动覆盖，会提示 `frac.py update --force`。
+- 换完在 stderr 提示“已自动更新”：这次命令还是旧版跑的；规矩可能有变，先重读 `SKILL.md`；换下来的文件跟这次的改动一起提交，仓库里的副本就跟上了。
+- raw.githubusercontent.com 连不上时改用 jsDelivr（可能晚几个小时，sha256 校验挡住新旧混杂）。
+
+```bash
+python .claude/skills/frac-context/scripts/frac.py version         # 版本、来源、上次检查结果
+python .claude/skills/frac-context/scripts/frac.py update --check  # 现在就查，只报告
+python .claude/skills/frac-context/scripts/frac.py update          # 现在就查，有新版就换
+```
+
+环境变量：
+
+```text
+FRAC_UPDATE=auto     默认：有新版就换
+FRAC_UPDATE=notify   只提示，不换
+FRAC_UPDATE=off      不联网（CI、离线环境、测试）
+FRAC_UPDATE_URL      换来源：指到一个 skill 目录，末尾带 /
+FRAC_UPDATE_CACHE    换缓存文件的位置
+```
+
+### 维护者：发版
+
+1. 改代码或文档；要让各仓库换上，就调高 `scripts/fraclib/__init__.py` 里的 `FRAC_VERSION`（修正调第三位，规矩或命令变了调第二位）。
+2. 重写 manifest：`python .claude/skills/frac-context/scripts/frac.py manifest --write`。
+3. 跑 `tests/` 下的测试（`test_frac_update.py` 会检查 `manifest.json` 和文件、版本号一致）。
+4. 合进 main。各机器在一小时内的下一次运行就会换上（走 jsDelivr 的可能再晚几个小时）。
+
+只改文件、不调版本号，各仓库不会换（上游版本不比本地新）。
+
+---
+
 ## 项目 README 里怎么写
 
 `SKILL.md` 的 Meta 说明要求在项目根目录的 README 里简要说明这一机制。可以照抄这一段：
@@ -285,7 +332,7 @@ git rev-parse --git-path frac-context-usage.json
 ````markdown
 > **分形上下文 `.frac.md`**：每个目录下的 `.frac.md` 只总结本目录的直属文件和直属子目录的 `.frac.md`。
 > **只在收尾时更新**（代码和测试都定了、提交之前），中途落后是正常的；单份不超过 10 KiB；不写版本史、测试条数这类会过时的东西。
-> 规则与工具在 [`.claude/skills/frac-context/`](.claude/skills/frac-context/SKILL.md)，根目录的摘要见 [`.frac.md`](.frac.md)：
+> 规则与工具在 [`.claude/skills/frac-context/`](.claude/skills/frac-context/SKILL.md)（会自己更新，换下来的文件随改动一起提交），根目录的摘要见 [`.frac.md`](.frac.md)：
 >
 > ```bash
 > python3 .claude/skills/frac-context/scripts/frac.py stamp_for_clone .   # 刚 clone 完先跑一次
@@ -323,6 +370,10 @@ build/
 ```
 
 默认已忽略常见噪声目录，例如 `.git/`、`node_modules/`、`dist/`、`build/`、`.venv/`、`__pycache__/`、`.next/` 等。
+
+带斜杠的目录模式（如 `docs/generated/`）从项目根目录算起，连同下面的文件一起忽略；单段的（如 `build/`）忽略任何一层叫这个名字的目录。
+
+仓库里的 frac-context skill 副本（`*/skills/frac-context/`、`skills/frac-context/`，以及正在运行的那一份）自动不进 `.frac.md` 树：它的说明就是 `SKILL.md`，内容又由自动更新维护。副本里以前写的 `.frac.md`，以及目录里除了 `.frac.md` 什么都没有的，`check` 会列为“可以删”。
 
 如果当前目录是 Git 仓库，工具会优先使用：
 
@@ -380,6 +431,7 @@ Obsidian / Markdown 知识库
 ```bash
 python tests/test_frac_smoke.py
 python tests/test_frac_budget.py
+python tests/test_frac_update.py
 ```
 
-测试只依赖 Python 标准库（3.9+）；`test_frac_budget.py` 里依赖 git 的部分在没装 git 时跳过。
+测试只依赖 Python 标准库（3.9+），都设了 `FRAC_UPDATE=off`；`test_frac_budget.py` 里依赖 git 的部分在没装 git 时跳过；`test_frac_update.py` 在本机起一个 HTTP 服务当上游，不连外网。
