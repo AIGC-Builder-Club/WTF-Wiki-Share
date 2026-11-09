@@ -195,6 +195,31 @@ def test_confirm_refuses_and_stops(base: Path) -> None:
     assert "还没有 .frac.md" in out
 
 
+def test_atomic_save_stays_fresh(base: Path) -> None:
+    """先写临时文件再改名（编辑器、Agent 写文件工具的做法）写好的 .frac.md 是新的；之后真的增删文件才变旧。"""
+    project = make_project(base)
+    auth = project / "src" / "auth"
+    login = auth / "login.py"
+    write(login, "def login(): return 2\n")
+    set_mtime(login, 5)
+    assert states(project)["src/auth"]["state"] == "stale"
+    tmp = auth / ".frac.md.tmp-save"
+    tmp.write_text(frac_doc("src/auth", "改名写入。"), encoding="utf-8")
+    set_mtime(tmp, 6)
+    os.replace(str(tmp), str(auth / ".frac.md"))  # 目录 mtime 跟着变成“现在”
+    frac_ns = (auth / ".frac.md").stat().st_mtime_ns
+    dir_ts = frac_ns + 300_000  # 改名比写内容晚 0.3 毫秒
+    os.utime(auth, ns=(dir_ts, dir_ts))
+    assert states(project)["src/auth"]["state"] == "fresh"
+    # 过了一会儿删掉一个文件：只有目录 mtime 变了，照样算旧
+    (auth / "extra.py").write_text("x = 1\n", encoding="utf-8")
+    set_mtime(auth / "extra.py", -100)
+    (auth / "extra.py").unlink()
+    late = frac_ns + 10_000_000_000
+    os.utime(auth, ns=(late, late))
+    assert states(project)["src/auth"]["state"] == "stale"
+
+
 def test_chain_notes(base: Path) -> None:
     project = make_project(base)
     login = project / "src" / "auth" / "login.py"
@@ -316,6 +341,7 @@ def main() -> None:
         test_plan_final_and_confirm(Path(td) / "b")
         test_confirm_refuses_and_stops(Path(td) / "c")
         test_chain_notes(Path(td) / "d")
+        test_atomic_save_stays_fresh(Path(td) / "h")
         test_vendored_skill_and_removable(Path(td) / "f", use_git=False)
         if HAS_GIT:
             test_git_reminders(Path(td) / "e")

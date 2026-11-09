@@ -57,6 +57,8 @@ stale(D) ⇔ .frac.md missing or max(input_mtime_ns) > frac_mtime_ns
 3. 直属子目录 .frac.md 的 mtime
 ```
 
+目录 entry mtime 比 `.frac.md` 晚不到 2 秒的不算：编辑器和 Agent 的写文件工具多是“先写临时文件再改名”，改名会把目录 mtime 推到 `.frac.md` 之后，这是写它本身带出来的。所以刚写好的 `.frac.md` 就是新的，不用再 `confirm`。
+
 stale 只说明“输入比它新”，不说明内容错了。内容还对，就用 `confirm` 确认，不改内容（见第 7 节）。
 
 ---

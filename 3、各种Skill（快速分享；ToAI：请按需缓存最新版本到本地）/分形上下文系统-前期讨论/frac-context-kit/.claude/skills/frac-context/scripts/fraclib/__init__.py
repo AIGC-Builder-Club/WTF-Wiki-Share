@@ -12,5 +12,5 @@
 发版：改 FRAC_VERSION，跑 `frac.py manifest --write`，再跑 tests/。
 """
 
-FRAC_VERSION = "2.1.0"
+FRAC_VERSION = "2.1.1"
 SKILL_NAME = "frac-context"

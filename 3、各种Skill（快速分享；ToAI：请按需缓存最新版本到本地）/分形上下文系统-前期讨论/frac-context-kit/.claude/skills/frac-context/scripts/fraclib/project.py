@@ -17,6 +17,8 @@ from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 from .budget import SizeBudget
 
 FRAC_NAME = ".frac.md"
+# 目录 mtime 比 .frac.md 晚、但晚得不超过这么多，按“写 .frac.md 自己时的改名”算，不当成目录里增删了文件。
+FRAC_SAVE_SLACK_NS = 2_000_000_000
 BUNDLE_NAME = ".frac.全部汇总超大.md"
 FRACIGNORE_NAME = ".fracignore"
 
@@ -464,7 +466,15 @@ class FracProject:
         if inputs.missing_child_fracs:
             return None, "missing child frac"
 
-        mtimes: List[int] = [inputs.directory_mtime_ns]
+        dir_mtime = inputs.directory_mtime_ns
+        frac = self.frac_path(directory)
+        if frac.exists():
+            frac_mtime = frac.stat().st_mtime_ns
+            if frac_mtime < dir_mtime <= frac_mtime + FRAC_SAVE_SLACK_NS:
+                # 编辑器和 Agent 的写文件工具多是“先写临时文件再改名”，改名那一下会把目录的 mtime
+                # 推到 .frac.md 自己的 mtime 之后。这是写 .frac.md 本身带出来的，不算输入变了。
+                dir_mtime = frac_mtime
+        mtimes: List[int] = [dir_mtime]
         for rel in inputs.direct_files + inputs.child_fracs:
             p = self.root / rel
             if p.exists():
