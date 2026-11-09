@@ -220,6 +220,27 @@ def test_atomic_save_stays_fresh(base: Path) -> None:
     assert states(project)["src/auth"]["state"] == "stale"
 
 
+def test_symlink_outside_root(base: Path, use_git: bool) -> None:
+    """仓库里指到仓库外的软链（worktree 里共享的 docs/、data/ 常见）：不报错，也不算本树的内容。"""
+    outside = base / "outside"
+    write(outside / "x.py", "x = 1\n")
+    project = make_project(base)
+    try:
+        os.symlink(str(outside), str(project / "shared"))
+        os.symlink(str(outside / "x.py"), str(project / "src" / "link.py"))
+    except (OSError, NotImplementedError):
+        print("skip: symlinks not available")
+        return
+    if use_git:
+        git(project, "init", "-q")
+        git(project, "add", "-A")
+    st = states(project)
+    assert "shared" not in st and set(st) >= {".", "src", "src/auth"}, st
+    out = run(["inputs", "src"], project)
+    assert "src/main.py" in out and "src/link.py" not in out, out
+    run(["check", "."], project)
+
+
 def test_chain_notes(base: Path) -> None:
     project = make_project(base)
     login = project / "src" / "auth" / "login.py"
@@ -342,10 +363,12 @@ def main() -> None:
         test_confirm_refuses_and_stops(Path(td) / "c")
         test_chain_notes(Path(td) / "d")
         test_atomic_save_stays_fresh(Path(td) / "h")
+        test_symlink_outside_root(Path(td) / "i", use_git=False)
         test_vendored_skill_and_removable(Path(td) / "f", use_git=False)
         if HAS_GIT:
             test_git_reminders(Path(td) / "e")
             test_vendored_skill_and_removable(Path(td) / "g", use_git=True)
+            test_symlink_outside_root(Path(td) / "j", use_git=True)
         else:
             print("skip: git not installed")
     print("ok")

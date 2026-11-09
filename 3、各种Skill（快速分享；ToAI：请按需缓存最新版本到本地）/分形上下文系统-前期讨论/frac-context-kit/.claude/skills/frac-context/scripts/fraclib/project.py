@@ -210,8 +210,24 @@ class FracProject:
             patterns.append(line)
         return patterns
 
+    def _rel_to_root(self, path: Path) -> Optional[Path]:
+        """相对项目根的路径；软链指到根外面、两种算法都不在根下时返回 None（按忽略处理）。
+
+        仓库里的软链可以指向仓库外（例如 worktree 里 docs/、data/ 指回主仓）：resolve() 之后
+        跳出了根，relative_to 会抛错。所以先试解析后的路径，再退回不解析软链的绝对路径。
+        """
+        for candidate in (path.resolve(), Path(os.path.abspath(str(path)))):
+            try:
+                return candidate.relative_to(self.root)
+            except ValueError:
+                continue
+        return None
+
     def _is_default_ignored(self, path: Path) -> bool:
-        rel_parts = path.resolve().relative_to(self.root).parts
+        rel = self._rel_to_root(path)
+        if rel is None:
+            return True
+        rel_parts = rel.parts
         for part in rel_parts:
             if part in DEFAULT_IGNORE_DIR_NAMES:
                 return True
@@ -225,7 +241,9 @@ class FracProject:
     def _matches_fracignore(self, path: Path) -> bool:
         if not self.fracignore_patterns:
             return False
-        rel_path = path.resolve().relative_to(self.root)
+        rel_path = self._rel_to_root(path)
+        if rel_path is None:
+            return True
         rel = rel_path.as_posix()
         parts = rel_path.parts
         name = path.name
@@ -338,8 +356,8 @@ class FracProject:
                 continue
             for fn in filenames:
                 p = d / fn
-                if not self.is_ignored(p):
-                    files.add(p.resolve())
+                if not self.is_ignored(p) and self._rel_to_root(p.resolve()) is not None:
+                    files.add(p.resolve())  # 指到根外面的软链文件不算本树的内容
         return files
 
     def eligible_files(self) -> Set[Path]:
