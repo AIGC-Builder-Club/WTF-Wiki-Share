@@ -9,7 +9,7 @@
 				- 【AME-176】Issue，引用了过时的文档：```  - **一个已知的过期陷阱**：`Awesome_ObsidianPlugin_HugeRepo/docs/Obsidian-Reference-汇总与Bake.md` 第九节写着「本次未能在真实 Vault 上端到端验证」。**这句话是调研当时写的，早已过期。**  ```
 					- ————此类，使用【分形上下文  skill】则一般无问题（主要是不会这么言之凿凿——哪怕【后续忘记更新】  AI也可从  分形上下文  拼接出最新的结果、而不是受到过于笃定的自以为未过时的文档  ）。
 	- 2、常见索引类型，如：维护手册、更新日志，等等。
-- 2、善用CodeX的【Goal目标】功能（或    其它Agent  的同类型机制  ），在计划合理的情况下，【Goal执行目标】经常会有很好的完整效果。
+- 2、善用CodeX的【Goal目标】功能（或    其它Agent  的同类型机制  ），在计划合理的情况下，【Goal执行目标】经常会有很好的完整效果。 ^bid-fn8rgj6
 	- 副作用是：如果Goal设定有问题，则长时间的【CodeX Goal】执行，可能会发生严重偏离。
 	- 通用型目标（含编程）的设定，可以参照：
 		- https://github.com/hanshou101/Obsidian_PublicGitHubShare_InsteadOf_FeiShu/blob/main/2%E3%80%81Goal%E5%88%B6%E5%AE%9A%E3%80%81%E5%BC%80%E6%94%BE%E6%8E%A2%E7%B4%A2%E5%9E%8BGoal%E3%80%81Spec%E5%88%87%E9%9D%A2%E5%93%B2%E5%AD%A6/%E5%85%B3%E4%BA%8EGoal%E5%92%8CSpec%E5%88%87%E9%9D%A2%E5%93%B2%E5%AD%A6%E7%9A%84%E7%BB%84%E5%90%88%EF%BC%88%E5%96%82%E7%BB%99GptPro%E4%BD%BF%E7%94%A8%EF%BC%89/%E3%80%8A%E7%AC%AC%E4%B8%80%E7%AF%87%E3%80%8B%EF%BC%88%E8%A3%81%E5%89%AA%E7%89%88%EF%BC%89%E3%80%8A%F0%9F%9A%80%E5%BC%80%E5%8F%91%E8%80%85%E5%BF%85%E7%9C%8B%EF%BC%81Codex%20%20goal%E5%91%BD%E4%BB%A4%E9%AB%98%E7%BA%A7%E6%8A%80%E5%B7%A7%E4%BF%9D%E5%A7%86%E7%BA%A7%E6%95%99%E7%A8%8B%EF%BC%9APlan%E6%A8%A1%E5%BC%8F%2BSpec-Driven%2B%E8%87%AA%E7%A0%94Skill%20%E4%B8%89%E5%A4%A7%E6%8A%80%E5%B7%A7%E7%BB%84%E5%90%88%E8%AE%A9%E6%95%88%E7%8E%87%E5%80%8D%E5%A2%9E%E3%80%8B.md
@@ -19,7 +19,11 @@
 	- 目前，我只有一个大的Vault————其下的很多子目录，作为单独的子  GitHub仓库。
 	- 目前，以【 https://github.com/hanshou101/2A-META 】为 AI-First 仓库，围绕其为核心打造。
 		- 【 https://github.com/hanshou101/Awesome_ObsidianPlugin_HugeRepo 】，为  包含多个SubModulde的【原生/二开Obsidian插件】的一个Macro仓库。
-- 4、遇到过的AI愚蠢的错误
+- 4、有很多很实用的技巧或者技能：
+	- 1、通用型
+		- 遇到需要和我对齐、或和我讨论的问题，使用【grill-with-docs】技能。
+	- （之前在  [UI设计类技能.skill](Root/_外部Publish/3、各种Skill（快速分享；ToAI：请按需缓存最新版本到本地）/UI设计类技能.skill.md)  中，存放了找到的一些资源：  它们有些可能过时了，有些可能拿来稍微还能用；需要辨别一下。    ）
+- 5、遇到过的AI愚蠢的错误
 	- 1    （这个错误，至少看到   有2个Agent    犯过了。    ）
 		- 之前提交了一个  PR#91  ————然后我合并PR后进行测试，被我指出Bug————然后它说：已修复并推到同一个 PR：https://github.com/hanshou101/Awesome_ObsidianPlugin_HugeRepo/pull/91
 			- 然后我这边，直接反馈  在仓库  里，看不到相关改变、相关更新。

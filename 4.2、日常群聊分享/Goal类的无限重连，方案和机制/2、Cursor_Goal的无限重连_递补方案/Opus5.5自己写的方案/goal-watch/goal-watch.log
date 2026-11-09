@@ -1,0 +1,111 @@
+2026-11-07 [16:48:05] RUNNING     last=assistant transcript@16:30:24 quiet=0.0m run@16:20:47 checkpoint@16:47:31
+2026-11-07 [16:53:05] RUNNING     last=assistant transcript@16:30:24 quiet=0.0m run@16:20:47 checkpoint@16:49:48
+2026-11-07 [16:58:05] RUNNING     last=assistant transcript@16:30:24 quiet=0.0m run@16:20:47 checkpoint@16:57:52
+2026-11-07 [17:03:05] RUNNING     last=assistant transcript@16:30:24 quiet=0.0m run@16:20:47 checkpoint@16:57:52
+2026-11-07 [17:08:05] ERROR_FRESH last=turn_ended:error transcript@17:07:09 quiet=0.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:13:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=5.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:13:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:18:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=10.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:18:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:23:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=15.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:23:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:28:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=20.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:28:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:33:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=25.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:33:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:38:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=30.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:38:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:43:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=35.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:43:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:48:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=40.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:48:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:53:05] INTERRUPTED last=turn_ended:error transcript@17:07:09 quiet=45.0m run@- checkpoint@16:57:52 error='Agent turn stopped after repeated resume attempts made no progress'
+2026-11-07 [17:53:05] WAKE sent (INTERRUPTED)
+2026-11-07 [17:58:05] ERROR_FRESH last=turn_ended:error transcript@17:57:17 quiet=0.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:03:05] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=5.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:03:05] WAKE sent (INTERRUPTED)
+2026-11-07 [18:08:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=10.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:08:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:13:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=15.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:13:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:18:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=20.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:18:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:23:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=25.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:23:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:28:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=30.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:28:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:33:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=35.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:33:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:38:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=40.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:38:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:43:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=45.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:43:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:48:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=50.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:48:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:53:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=55.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:53:06] WAKE sent (INTERRUPTED)
+2026-11-07 [18:58:06] INTERRUPTED last=turn_ended:error transcript@17:57:17 quiet=60.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [18:58:06] WAKE sent (INTERRUPTED)
+2026-11-07 [19:03:06] ERROR_FRESH last=turn_ended:error transcript@19:01:48 quiet=0.0m run@- checkpoint@16:57:52 error='[unavailable] HTTP 503'
+2026-11-07 [19:08:06] ERROR_FRESH last=turn_ended:error transcript@19:07:57 quiet=0.0m run@- checkpoint@19:07:15 error='[unavailable] HTTP 503'
+2026-11-07 [19:13:06] INTERRUPTED last=turn_ended:error transcript@19:07:57 quiet=5.0m run@- checkpoint@19:07:15 error='[unavailable] HTTP 503'
+2026-11-07 [19:13:06] WAKE sent (INTERRUPTED)
+2026-11-07 [19:18:06] ERROR_FRESH last=turn_ended:error transcript@19:17:15 quiet=0.0m run@- checkpoint@19:16:39 error='[unavailable] HTTP 503'
+2026-11-07 [19:23:06] RESUMED     last=turn_ended:error transcript@19:21:27 quiet=0.0m run@19:22:48 checkpoint@19:22:49 error='[unavailable] HTTP 503'
+2026-11-07 [19:28:06] INTERRUPTED last=turn_ended:error transcript@19:24:13 quiet=0.0m run@- checkpoint@19:23:48 error='[unavailable] HTTP 503'
+2026-11-07 [19:28:06] WAKE sent (INTERRUPTED)
+2026-11-07 [19:33:06] INTERRUPTED last=turn_ended:error transcript@19:24:13 quiet=5.0m run@- checkpoint@19:23:48 error='[unavailable] HTTP 503'
+2026-11-07 [19:33:06] WAKE sent (INTERRUPTED)
+2026-11-07 [19:38:06] INTERRUPTED last=turn_ended:error transcript@19:24:13 quiet=10.0m run@- checkpoint@19:23:48 error='[unavailable] HTTP 503'
+2026-11-07 [19:38:06] WAKE sent (INTERRUPTED)
+2026-11-07 [19:43:06] INTERRUPTED last=turn_ended:error transcript@19:24:13 quiet=15.0m run@- checkpoint@19:23:48 error='[unavailable] HTTP 503'
+2026-11-07 [19:43:06] WAKE sent (INTERRUPTED)
+2026-11-07 [19:48:06] INTERRUPTED last=turn_ended:error transcript@19:24:13 quiet=20.0m run@- checkpoint@19:23:48 error='[unavailable] HTTP 503'
+2026-11-07 [19:48:06] WAKE sent (INTERRUPTED)
+2026-11-07 [19:53:06] RESUMED     last=turn_ended:error transcript@19:24:13 quiet=0.0m run@19:53:00 checkpoint@19:53:01 error='[unavailable] HTTP 503'
+2026-11-07 [19:58:06] INTERRUPTED last=turn_ended:error transcript@19:53:24 quiet=0.0m run@- checkpoint@19:53:01 error='[unavailable] HTTP 503'
+2026-11-07 [19:58:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:03:06] INTERRUPTED last=turn_ended:error transcript@19:53:24 quiet=5.0m run@- checkpoint@19:53:01 error='[unavailable] HTTP 503'
+2026-11-07 [20:03:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:08:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=0.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:08:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:13:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=5.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:13:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:18:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=10.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:18:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:23:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=15.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:23:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:28:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=20.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:28:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:33:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=25.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:33:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:38:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=30.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:38:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:43:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=35.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:43:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:48:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=40.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:48:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:53:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=45.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [20:53:06] WAKE sent (INTERRUPTED)
+2026-11-07 [20:58:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=50.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:03:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=55.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:08:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=60.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:08:06] WAKE sent (INTERRUPTED)
+2026-11-07 [21:13:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=65.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:18:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=70.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:23:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=75.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:23:06] WAKE sent (INTERRUPTED)
+2026-11-07 [21:28:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=80.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:33:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=85.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:38:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=90.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:38:06] WAKE sent (INTERRUPTED)
+2026-11-07 [21:43:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=95.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:48:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=100.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:53:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=105.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [21:53:06] WAKE sent (INTERRUPTED)
+2026-11-07 [21:58:06] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=110.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [22:03:07] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=115.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [22:08:07] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=120.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [22:08:07] WAKE sent (INTERRUPTED)
+2026-11-07 [22:13:07] INTERRUPTED last=turn_ended:error transcript@20:03:52 quiet=125.0m run@- checkpoint@20:03:29 error='[unavailable] HTTP 503'
+2026-11-07 [22:18:07] ERROR_FRESH last=turn_ended:error transcript@22:17:36 quiet=0.0m run@- checkpoint@22:17:16 error='[unavailable] HTTP 503'

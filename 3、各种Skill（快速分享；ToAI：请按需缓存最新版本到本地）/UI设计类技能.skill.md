@@ -1,6 +1,6 @@
 
 - 可参照网站：
-	- ![（小Y）前端和设计类：](Root/【2A-META】AI-First时代，知识库（toAI完全公开）/AI-First时代，知识库（toAI完全公开）/AI史书/AI技术史书.md#^bid-ise8w79)
+	- ![（小Y）前端和设计类：](Root/【2A-META】AI-First时代，知识库（toAI完全公开）/101、AI-First时代，知识库（toAI完全公开）/AI史书/【技术】AI技术史书.md#^bid-ise8w79)
 	- 1
 
 - UI设计工具
