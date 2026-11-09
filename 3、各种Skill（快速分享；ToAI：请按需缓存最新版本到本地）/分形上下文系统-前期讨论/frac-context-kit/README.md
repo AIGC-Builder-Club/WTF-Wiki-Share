@@ -17,6 +17,14 @@ ChildFracs(D) = D 的直属子目录中的 .frac.md
 
 父级 `.frac.md` 只相信直属子目录的 `.frac.md`，不跨层读取孙目录源码或资料。
 
+三条规矩（详见 `SKILL.md`）：
+
+```text
+1. 只在收尾时更新：代码和测试都定了、提交之前，一次做完；中途落后是正常的
+2. 单份有上限：硬上限 10 KiB；每个目录的预算 = 2 KiB + 直属条目 × 340 B，封顶 10 KiB
+3. 不写会过时的东西：版本史、日期、测试条数、行号、提交号、原话、参数细目
+```
+
 ---
 
 ## 目录结构
@@ -41,6 +49,7 @@ frac-context-kit/
     knowledge-base/
   tests/
     test_frac_smoke.py
+    test_frac_budget.py
 ```
 
 ---
@@ -66,6 +75,8 @@ CLAUDE.md.example  ->  CLAUDE.md
 python .claude/skills/frac-context/scripts/frac.py status .
 ```
 
+已经装过旧版的项目，整个目录覆盖即可；命令和参数都向下兼容。项目 README 里那段说明照下面“项目 README 里怎么写”改一下。
+
 ---
 
 ## 推荐工作流
@@ -76,17 +87,87 @@ python .claude/skills/frac-context/scripts/frac.py status .
 python .claude/skills/frac-context/scripts/frac.py init .
 ```
 
-`init` 会为需要维护上下文的目录创建 `.frac.md` 占位文件，并故意把它们标记为 stale。接下来运行：
-
-```bash
-python .claude/skills/frac-context/scripts/frac.py plan .
-```
-
-按输出顺序，从最深目录开始更新 `.frac.md`。
+`init` 会为需要维护上下文的目录创建 `.frac.md` 占位文件，并故意把它们标记为 stale。接下来按第 4 步的收尾流程，从最深目录开始写。
 
 ---
 
-### 2. 查看哪些上下文过期
+### 2. 动手前：读目标路径的上下文链
+
+```bash
+python .claude/skills/frac-context/scripts/frac.py chain src/auth/login.ts
+```
+
+示例输出：
+
+```text
+frac-chain:
+  .frac.md           0.8K
+  src/.frac.md       0.7K
+  src/auth/.frac.md  0.8K stale
+
+提示：标 stale 的比它的输入旧。照读：对不上的以代码和你自己的改动为准；不用现在修，收尾时一起处理。
+```
+
+编码前读取这条链，再读取目标文件本身。必要时根据最近一级 `.frac.md` 的“什么时候需要下钻”提示，读相邻文件。同一条链本轮读过就不再读。
+
+标 `stale` 的比它的输入旧：照读，对不上的以代码为准。标“超限”的太长：先读第 1、4、5 节，第 2 节只找你要改的文件。
+
+---
+
+### 3. 中途：不管 `.frac.md`
+
+中途不更新 `.frac.md`，也不为了对齐去反复跑 `status` / `plan`。中途写的会被后面的改动推翻；每读写一份，上下文就大一圈，整轮就长一截。
+
+中途读到 `.frac.md` 和代码对不上，是正常的。你这次改了什么，你的对话里都有。
+
+中途跑了 `status` / `plan`，工具会提醒这些；一小时内跑到第三次，还会提醒查得太勤。
+
+---
+
+### 4. 收尾：一次做完
+
+代码和测试都定了、提交之前：
+
+```bash
+python .claude/skills/frac-context/scripts/frac.py plan . --final
+```
+
+示例输出：
+
+```text
+收尾清单（自底向上，按顺序处理；每份只写一次）：
+   1. src/auth  [输入变了]  0.8K/2.7K
+   2. src       [连带]      0.7K/2.7K
+   3. .         [连带]      0.8K/3.0K
+```
+
+`0.8K/2.7K` 是现在的大小 / 这个目录的预算。
+
+逐个处理：
+
+```bash
+# 看这一层允许读的输入、预算、现有内容里的易变项
+python .claude/skills/frac-context/scripts/frac.py inputs src/auth
+```
+
+- 这一层该写的变了（职责、文件分工、对外接口、约束、下钻建议）：以现有内容为底稿整份重写，不超预算，不在旧文后面追加。只读这次变了的输入，不读孙目录源码，不搜索全仓库，不做 RAG。
+- 没变（函数内部、修 bug、调数字、改测试）：只确认，上面没有别的改动的各层一起确认：
+
+```bash
+python .claude/skills/frac-context/scripts/frac.py confirm src/auth
+```
+
+全部处理完：
+
+```bash
+python .claude/skills/frac-context/scripts/frac.py check . --changed
+```
+
+本轮改过的 `.frac.md` 没有超过硬上限，才算收尾完成（退出码 0）。
+
+---
+
+### 5. 查看全部状态
 
 ```bash
 python .claude/skills/frac-context/scripts/frac.py status .
@@ -100,65 +181,9 @@ stale       输入比当前 .frac.md 更新
 fresh       当前 .frac.md 晚于或等于所有输入
 ```
 
-注意：`status` 会区分“当前实际 stale”和“由于子目录更新而应该连带更新的祖先”。
+每行带 `size/budget` 和标记（超限 / 超预算 / 接近）。`status` 会区分“当前实际 stale”和“由于子目录更新而应该连带更新的祖先”。
 
----
-
-### 3. 获取自底向上的更新顺序
-
-```bash
-python .claude/skills/frac-context/scripts/frac.py plan .
-```
-
-示例输出：
-
-```text
-update-order:
-  1. src/auth
-  2. src
-  3. .
-```
-
-Agent 应该严格按这个顺序更新。
-
----
-
-### 4. 更新某个目录 `.frac.md` 时，只读取规定输入
-
-```bash
-python .claude/skills/frac-context/scripts/frac.py inputs src/auth
-```
-
-它会输出：
-
-```text
-DIRECT FILES:
-  src/auth/login.ts
-  src/auth/session.ts
-
-CHILD FRACS:
-  src/auth/providers/.frac.md
-```
-
-更新 `src/auth/.frac.md` 时，只读这些输入。不读孙目录源码，不搜索全仓库，不做 RAG。
-
----
-
-### 5. 编码前读取目标路径的上下文链
-
-```bash
-python .claude/skills/frac-context/scripts/frac.py chain src/auth/login.ts
-```
-
-示例输出：
-
-```text
-.frac.md
-src/.frac.md
-src/auth/.frac.md
-```
-
-编码前读取这条链，再读取目标文件本身。必要时根据最近一级 `.frac.md` 的“什么时候需要下钻”提示，读相邻文件。
+不带 `--final` 的 `plan .` 只列更新顺序，向下兼容旧用法。
 
 ---
 
@@ -196,7 +221,79 @@ python .claude/skills/frac-context/scripts/frac.py bundle examples/minimal-proje
 
 这只会合并 `src/` 及其后代的 `.frac.md`，并写入 `src/.frac.全部汇总超大.md`。
 
-`bundle` 不会被 `status`、`plan`、`inputs`、`chain`、`init` 或 `stamp_for_clone` 自动调用。汇总文件也被排除在 Frac 内容输入之外。首次创建文件会改变所在根目录的 entry mtime，因此对应根摘要可能进入一次正常更新计划；后续原位重写不会反复触发该变化。
+`bundle` 不会被 `status`、`plan`、`inputs`、`chain`、`confirm`、`check`、`init` 或 `stamp_for_clone` 自动调用。汇总文件也被排除在 Frac 内容输入之外。首次创建文件会改变所在根目录的 entry mtime，因此对应根摘要可能进入一次正常更新计划；后续原位重写不会反复触发该变化。
+
+---
+
+## 大小：硬上限与预算
+
+```text
+硬上限 = 10 KiB（10,240 字节，按 UTF-8 计；中文约 3,400 字）
+预算   = min(10 KiB, 2 KiB + 直属条目数 × 340 B)
+直属条目数 = 直属有效文件数 + 直属子目录数
+```
+
+| 直属条目 | 预算 |
+|---|---|
+| 0 | 2.0 KiB |
+| 3 | 3.0 KiB |
+| 10 | 5.3 KiB |
+| 18 | 8.0 KiB |
+| 25 及以上 | 10 KiB（封顶） |
+
+预算只看本目录自己，不和仓库里别的目录比：别处多一个文件，这里的预算不会跟着动。
+
+`frac.py` 每次运行都量：超过硬上限，`check` 不通过、`confirm` 拒绝；超过预算提示压缩；到预算 85% 提示“接近”。超了先删易变内容和细节；直属文件多就按功能分组写；只有拆目录不用改配置、打包、路径时才拆目录。
+
+常量在 `frac.py` 开头（`HARD_CAP_BYTES`、`BUDGET_BASE_BYTES`、`BUDGET_PER_ENTRY_BYTES`）。
+
+---
+
+## 易变内容
+
+`inputs`、`plan --final`、`check` 会找出 `.frac.md` 里会过时、或者会让它变成变更日志的内容，并给出在哪几行、怎么改：
+
+```text
+版本号        写现在是什么，不写哪一版加了什么
+日期          不写日期和“最近更新”：新鲜度看 mtime，历史看 git
+测试/检查条数  不写有几条：写测试在哪、测什么
+行号/行数      写函数名或小节名
+提交号/评论号  历史在 git log 和 issue 里
+超长条目      一条只写做什么、对外给什么、改时注意什么
+```
+
+这是正则判断，可能误报，所以只提示、不拦截。代码块里的内容不查。
+
+---
+
+## 调用记录
+
+`status`、`plan`、`chain`、`inputs` 会把调用时间记在 git 目录里：
+
+```bash
+git rev-parse --git-path frac-context-usage.json
+```
+
+它不进工作区，只用来提醒“一小时内查了好几次”“这条链刚取过”。不是 git 仓库就不记。设环境变量 `FRAC_USAGE_LOG=0` 可关掉。
+
+---
+
+## 项目 README 里怎么写
+
+`SKILL.md` 的 Meta 说明要求在项目根目录的 README 里简要说明这一机制。可以照抄这一段：
+
+````markdown
+> **分形上下文 `.frac.md`**：每个目录下的 `.frac.md` 只总结本目录的直属文件和直属子目录的 `.frac.md`。
+> **只在收尾时更新**（代码和测试都定了、提交之前），中途落后是正常的；单份不超过 10 KiB；不写版本史、测试条数这类会过时的东西。
+> 规则与工具在 [`.claude/skills/frac-context/`](.claude/skills/frac-context/SKILL.md)，根目录的摘要见 [`.frac.md`](.frac.md)：
+>
+> ```bash
+> python3 .claude/skills/frac-context/scripts/frac.py stamp_for_clone .   # 刚 clone 完先跑一次
+> python3 .claude/skills/frac-context/scripts/frac.py chain <目标路径>     # 动手前：该读哪几份
+> python3 .claude/skills/frac-context/scripts/frac.py plan . --final      # 收尾：清单，逐个重写或 confirm
+> python3 .claude/skills/frac-context/scripts/frac.py check . --changed   # 收尾最后一步
+> ```
+````
 
 ---
 
@@ -206,14 +303,6 @@ python .claude/skills/frac-context/scripts/frac.py bundle examples/minimal-proje
 
 ```text
 .claude/skills/frac-context/references/frac-template.md
-```
-
-建议每个 `.frac.md` 控制长度：
-
-```text
-根目录：小于 150 行
-中层目录：小于 120 行
-叶子目录：小于 80 行
 ```
 
 ---
@@ -260,6 +349,7 @@ git ls-files --cached --others --exclude-standard
 不在每个代码文件头部插入注释。
 不让 .frac.md 替代 README。
 不让 .frac.md 承担变更日志。
+不在 .frac.md 里记版本史、测试条数这类易变数字。
 ```
 
 ---
@@ -289,6 +379,7 @@ Obsidian / Markdown 知识库
 
 ```bash
 python tests/test_frac_smoke.py
+python tests/test_frac_budget.py
 ```
 
-测试只依赖 Python 标准库。
+测试只依赖 Python 标准库（3.9+）；`test_frac_budget.py` 里依赖 git 的部分在没装 git 时跳过。
